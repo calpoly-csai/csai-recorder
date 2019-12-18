@@ -4,18 +4,22 @@
 
 Some features:
 
-- Quickly collect and classify data from any device
-- Easily take repeated recordings to capture different tones using the "Another" submit button
-- Recall the information of past participants with the Recents log
-- Download the website as a PWA app and record offline.
-
-Check out the [live site](https://gallant-minsky-9606aa.netlify.com/)!
+- Quickly collect and classify data from any device.
+- Easily take repeated recordings to capture different tones using the "Another" button.
+- Recall the information of past participants with the Recents log.
+- Download the website as a PWA app and record offline, ([except for iOS devices :(](https://medium.com/prototyped/what-we-learned-about-pwas-and-audio-playback-10a01c6aecbd)).
 
 ## Project setup
 
-1. Clone this repository with `git clone`.
+Before you begin, make sure that you have [Node](https://nodejs.org/) installed. I'd also recommend installing [Vue CLI](https://cli.vuejs.org/guide/installation.html#installation), so that you can make your own Vue projects.
+
+1. Clone the repository with `git clone`.
 2. Navigate to the root of the repository on the command line and run `npm install` to download related dependencies.
-3. To edit the page locally and view your changes live, run `npm run serve` and then open `http://localhost:8080/` in your browser.
-4. To test your code, add a file to the `/tests/unit` folder. Make sure the suffix of your file is `.spec.js`. For more information on how to unit test Vue applications, see [the docs](https://vue-test-utils.vuejs.org/guides/testing-single-file-components-with-jest.html)
+3. To edit the page locally and view your changes live, run `npm run serve` in the repo and then open `http://localhost:8080/` in your browser.
+4. To unit test your code, add a file to the `/tests/unit` folder. Make sure the suffix of your file is `.spec.js`. For more information on how to unit test Vue applications, see [the docs](https://vue-test-utils.vuejs.org/guides/testing-single-file-components-with-jest.html).
 
 Please feel free to post issues on the repo. The app still has a ways to go.
+
+##Resources
+[Vue docs](https://vuejs.org/v2/guide/)
+[PWA overview](https://developers.google.com/web/progressive-web-apps)
