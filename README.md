@@ -7,7 +7,7 @@ Some features:
 - Quickly collect and classify data from any device.
 - Easily take repeated recordings to capture different tones using the "Another" button.
 - Recall the information of past participants with the Recents log.
-- Download the website as a PWA app and record offline, ([except for iOS devices :(](https://medium.com/prototyped/what-we-learned-about-pwas-and-audio-playback-10a01c6aecbd)).
+- Download the website as a PWA app and record offline ([except for iOS devices](https://medium.com/prototyped/what-we-learned-about-pwas-and-audio-playback-10a01c6aecbd)).
 
 ## Project setup
 
@@ -20,6 +20,7 @@ Before you begin, make sure that you have [Node](https://nodejs.org/) installed.
 
 Please feel free to post issues on the repo. The app still has a ways to go.
 
-##Resources
-[Vue docs](https://vuejs.org/v2/guide/)
-[PWA overview](https://developers.google.com/web/progressive-web-apps)
+## Resources
+
+- [Vue docs](https://vuejs.org/v2/guide/)
+- [PWA overview](https://developers.google.com/web/progressive-web-apps)
