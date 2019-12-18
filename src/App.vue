@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <transition name="fade">
+    <transition name="fade" mode="out-in">
       <router-view />
     </transition>
   </div>
@@ -10,6 +10,7 @@
 * {
   box-sizing: border-box;
   margin: 0;
+  padding: 0;
 }
 
 #app {
@@ -20,14 +21,45 @@
   --secondary: #a3a3a3;
 
   font-family: "Karla", Helvetica, Arial, sans-serif;
+  font-size: 20px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #3b3b3b;
+  color: var(--dark);
 }
 
 .page {
+  display: block;
   width: 100%;
   height: 100vh;
+}
+
+.content {
+  background: white;
+  width: min(750px, 100%);
+  min-height: 100vh;
+  padding: 15px 30px;
+  margin: 0 auto;
+}
+
+h1 {
+  font-size: 43px;
+}
+
+button {
+  display: block;
+  border: none;
+  color: white;
+  background: var(--dark);
+  padding: 7px 67px;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: inherit;
+  margin: 20px auto;
+  cursor: pointer;
+
+  &.shake {
+    animation: shake 0.5s ease-in-out;
+  }
 }
 
 //ANIMATIONS
@@ -41,6 +73,15 @@
   &-enter,
   &-leave-to {
     opacity: 0;
+  }
+}
+
+@keyframes shake {
+  25% {
+    transform: translateX(20px);
+  }
+  75% {
+    transform: translateX(-20px);
   }
 }
 </style>

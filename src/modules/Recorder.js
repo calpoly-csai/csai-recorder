@@ -27,8 +27,8 @@ export class Recorder {
   async stop() {
     let recording = new Promise(resolve => {
       this.mediaRecorder.addEventListener("stop", () => {
-        const blob = new Blob(this.streamData);
-        resolve(URL.createObjectURL(blob));
+        const blob = new Blob(this.streamData, { type: "audio/wav" });
+        resolve(blob);
         this.streamData = [];
       });
     });
