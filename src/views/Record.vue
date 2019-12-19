@@ -122,7 +122,7 @@ export default {
 
 <style lang="scss">
 .record-view {
-  $circle-diameter: min(40vh, 40vw);
+  $circle-diameter: 40vmin;
   background: var(--accent);
   display: flex;
   flex-direction: column;
@@ -168,6 +168,7 @@ export default {
     }
 
     .countdown {
+      font-size: 20vmin;
       color: var(--accent);
     }
   }
