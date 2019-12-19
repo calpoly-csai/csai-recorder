@@ -3,28 +3,19 @@
     <div class="content">
       <nav>
         <img @click="exit" src="@/assets/back-arrow.svg" alt="back" />
-        <img
-          @click="$router.push('/recents')"
-          src="@/assets/book.svg"
-          alt="recents"
-        />
+        <img @click="$router.push('/recents')" src="@/assets/book.svg" alt="recents" />
       </nav>
       <div class="title">
         <h1>Classify</h1>
         <div v-if="audioBlob" class="audio" @click="playAudio">
-          <img v-if="audio.isPlaying" src="@/assets/pause.svg" alt="pause" />
-          <img v-else src="@/assets/pause.svg" alt="play" />
+          <img src="@/assets/play.svg" alt="play" />
         </div>
         <audio ref="audio"></audio>
       </div>
 
       <form @submit.prevent>
         <div class="field" v-for="field in fields" :key="field.label">
-          <text-field
-            v-if="field.type === 'text'"
-            v-model="field.value"
-            :label="field.label"
-          ></text-field>
+          <text-field v-if="field.type === 'text'" v-model="field.value" :label="field.label"></text-field>
           <select-field
             v-else-if="field.type === 'select'"
             v-model="field.value"
@@ -108,10 +99,8 @@ export default {
       if (!this.audioBlob) return;
       this.audio.url = URL.createObjectURL(this.audioBlob);
       this.$refs.audio.src = this.audio.url;
-      debugger;
     },
     playAudio() {
-      if (!this.audio.url) this.setupAudio();
       if (this.audio.isPlaying) return;
       this.$refs.audio.play();
       setTimeout(() => {
@@ -173,6 +162,7 @@ export default {
   },
   mounted() {
     if (this.$store.state.autofillData) this.autofill();
+    this.setupAudio();
   },
   beforeDestroy() {
     if (this.audio.url) URL.revokeObjectURL(this.audio.url);
