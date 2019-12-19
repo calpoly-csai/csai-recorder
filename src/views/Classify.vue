@@ -184,6 +184,11 @@ export default {
       background: var(--dark);
       padding: 20px;
       border-radius: 50%;
+      transition: transform 0.3s;
+
+      &:active {
+        transform: scale(0.97);
+      }
 
       img {
         display: block;
