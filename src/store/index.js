@@ -16,13 +16,13 @@ export default new Vuex.Store({
   },
   mutations: {
     addParticipant(state, participant) {
-      state.participants.push(participant);
+      state.participants.unshift(participant);
     },
     updateParticipant(state, data) {
       let match = ({ firstName, lastName }) =>
         firstName === data.firstName && lastName === data.lastName;
       let index = state.participants.findIndex(match);
-      if (index === -1) state.participants.push(data);
+      if (index === -1) state.participants.unshift(data);
       else state.participants[index] = data;
     },
     eraseRecording(state) {
