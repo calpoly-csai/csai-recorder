@@ -36,14 +36,17 @@ export default {
   .label {
     font-size: 12px;
     font-weight: 700;
-    transition: opacity 0.7s, transform 0.7s;
+    transition: all 0.7s;
     //Defaults to hidden state
     opacity: 0;
-    transform: translateX(-20px);
+    transform: translateY(100%);
     pointer-events: none;
+    clip-path: inset(0 0 100% 0);
+
     &.shown {
       opacity: 1;
-      transform: translateX(0);
+      transform: translateY(0%);
+      clip-path: inset(0 0 0% 0);
       pointer-events: all;
     }
   }

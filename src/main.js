@@ -7,6 +7,7 @@ import Vuelidate from "vuelidate";
 Vue.use(Vuelidate);
 
 Vue.config.productionTip = false;
+Vue.config.ignoredElements = [/^ion-/];
 
 new Vue({
   router,

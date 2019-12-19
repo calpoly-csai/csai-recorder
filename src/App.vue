@@ -35,7 +35,8 @@
 
 .content {
   background: white;
-  width: min(750px, 100%);
+  width: 100%;
+  max-width: 750px;
   min-height: 100vh;
   padding: 15px 30px;
   margin: 0 auto;
@@ -56,10 +57,36 @@ button {
   font-size: inherit;
   margin: 20px auto;
   cursor: pointer;
+  transition: transform 0.3s;
 
   &.shake {
     animation: shake 0.5s ease-in-out;
   }
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+ion-icon {
+  font-size: 40px;
+  cursor: pointer;
+  transition: all 0.3s;
+  border-radius: 7px;
+
+  &:active {
+    transform: scale(0.95);
+    background: whitesmoke;
+  }
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px;
+  margin-bottom: 30px;
+  border-bottom: 1px solid var(--secondary);
 }
 
 //ANIMATIONS

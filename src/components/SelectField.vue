@@ -2,15 +2,13 @@
   <div class="select-field">
     <p class="label">{{ label }}</p>
     <div class="choices">
-      <p
+      <button
         class="choice"
         v-for="choice in choices"
         :key="choice.value"
         @click="selectChoice(choice.value)"
         :class="{ selected: choice.value === value }"
-      >
-        {{ choice.label }}
-      </p>
+      >{{ choice.label }}</button>
     </div>
   </div>
 </template>
@@ -47,13 +45,22 @@ export default {
       flex: 0 0 auto;
       color: var(--secondary);
       font-weight: 500;
+      margin: 0;
+      border: none;
+      background: transparent;
+
       margin-right: 20px;
       cursor: pointer;
       padding: 10px;
       border-radius: 7px;
+      transition: all 0.3s;
 
       &.selected {
         color: var(--dark);
+      }
+      &:active {
+        transform: scale(0.99);
+        background: whitesmoke;
       }
     }
   }

@@ -2,11 +2,7 @@
   <div class="page recents-view">
     <div class="content">
       <nav>
-        <img
-          @click="$router.push('classify')"
-          src="@/assets/back-arrow.svg"
-          alt="back"
-        />
+        <ion-icon name="arrow-back" @click="$router.push('classify')"></ion-icon>
       </nav>
       <h1>Recents</h1>
       <ul class="participants">
@@ -15,13 +11,12 @@
           v-for="({ firstName, lastName }, index) in participants"
           :key="index"
           @click="queueAutofill(index)"
-        >
-          {{ firstName }} {{ lastName }}
-        </li>
+        >{{ firstName }} {{ lastName }}</li>
       </ul>
-      <p v-if="!participants.length" class="empty-message">
-        People who you record during this session will appear here.
-      </p>
+      <p
+        v-if="!participants.length"
+        class="empty-message"
+      >People who you record during this session will appear here.</p>
     </div>
   </div>
 </template>
@@ -45,18 +40,6 @@ export default {
 <style lang="scss">
 .recents-view {
   background: whitesmoke;
-  nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 5px;
-    margin-bottom: 30px;
-    border-bottom: 2px solid var(--secondary);
-
-    img {
-      cursor: pointer;
-    }
-  }
   .participants {
     padding: 20px 10px;
     list-style: none;

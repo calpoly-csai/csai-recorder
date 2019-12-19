@@ -2,8 +2,8 @@
   <div class="page classify-view">
     <div class="content">
       <nav>
-        <img @click="exit" src="@/assets/back-arrow.svg" alt="back" />
-        <img @click="$router.push('/recents')" src="@/assets/book.svg" alt="recents" />
+        <ion-icon name="arrow-back" @click="exit"></ion-icon>
+        <ion-icon name="book" @click="$router.push('/recents')"></ion-icon>
       </nav>
       <div class="title">
         <h1>Classify</h1>
@@ -173,18 +173,6 @@ export default {
 <style lang="scss">
 .classify-view {
   background: whitesmoke;
-  nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 5px;
-    margin-bottom: 30px;
-    border-bottom: 2px solid var(--secondary);
-
-    img {
-      cursor: pointer;
-    }
-  }
   .title {
     display: flex;
     justify-content: space-between;

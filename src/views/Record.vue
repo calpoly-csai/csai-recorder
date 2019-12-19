@@ -12,7 +12,7 @@
       <button class="reload" @click="reloadPage">Reload</button>
     </div>
     <div v-else class="microphone-box" key="mic">
-      <img @click="getAudioSample" class="mic" src="@/assets/microphone.svg" alt="Record" />
+      <ion-icon name="mic" class="mic" @click="getAudioSample"></ion-icon>
       <p class="recording-count">{{ recordingCountLabel }}</p>
     </div>
   </div>
@@ -137,9 +137,13 @@ export default {
   }
 
   .mic {
-    display: block;
     margin: 0 auto;
-    cursor: pointer;
+    color: white;
+    font-size: 90px;
+    &:active {
+      background: transparent;
+      opacity: 0.8;
+    }
   }
 
   .recording-count {
