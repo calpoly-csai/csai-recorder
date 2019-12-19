@@ -19,7 +19,7 @@ export class Recorder {
     this.hasPermission = true;
     //Create MediaRecorder
     this.mediaRecorder = new MediaRecorder(this.stream);
-    this.mediaRecorder.addEventListener("dataavaliable", this.onDataAvaliable);
+    this.mediaRecorder.ondataavailable = this.onDataAvaliable;
     return true;
   }
 
@@ -35,7 +35,9 @@ export class Recorder {
     if (!this.hasPermission) return;
     let recording = new Promise(resolve => {
       this.mediaRecorder.addEventListener("stop", () => {
-        const blob = new Blob(this.streamData, { type: "audio/wav" });
+        const blob = new Blob(this.streamData, {
+          type: "audio/ogg; codecs=opus"
+        });
         resolve(blob);
         this.streamData = [];
       });
@@ -46,16 +48,11 @@ export class Recorder {
   }
 
   onDataAvaliable({ data }) {
-    console.log("recieved data:", data);
     this.streamData.push(data);
   }
 
   destroy() {
-    if (this.stream)
-      this.mediaRecorder.removeEventListener(
-        "dataavaliable",
-        this.onDataAvaliable
-      );
+    this.mediaRecorder.ondataavailable = null;
   }
   isSupported() {
     return navigator.mediaDevices.getUserMedia && window.MediaRecorder;
