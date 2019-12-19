@@ -9,6 +9,7 @@ export class Recorder {
   }
 
   async requestAccess() {
+    if (!this.isSupported()) return false;
     //Get permissions
     try {
       this.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -55,5 +56,8 @@ export class Recorder {
         "dataavaliable",
         this.onDataAvaliable
       );
+  }
+  isSupported() {
+    return navigator.mediaDevices.getUserMedia && window.MediaRecorder;
   }
 }
