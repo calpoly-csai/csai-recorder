@@ -115,6 +115,7 @@ export default {
   },
   beforeDestroy() {
     window.removeEventListener("resize", this.onResize);
+    this.recorder.destroy();
   }
 };
 </script>
