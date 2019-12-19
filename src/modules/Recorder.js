@@ -3,28 +3,35 @@ export class Recorder {
     this.stream;
     this.mediaRecorder;
     this.streamData = [];
+    this.hasPermission = false;
 
     this.onDataAvaliable = this.onDataAvaliable.bind(this);
   }
 
-  async setup() {
+  async requestAccess() {
     //Get permissions
     try {
       this.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     } catch {
-      throw Error("Permission Denied");
+      return false;
     }
+    this.hasPermission = true;
     //Create MediaRecorder
     this.mediaRecorder = new MediaRecorder(this.stream);
     this.mediaRecorder.addEventListener("dataavaliable", this.onDataAvaliable);
+    return true;
   }
 
   async start() {
-    if (!this.stream) await this.setup();
+    if (!this.hasPermission) {
+      let success = await this.requestAccess();
+      if (!success) return;
+    }
     this.mediaRecorder.start();
   }
 
   async stop() {
+    if (!this.hasPermission) return;
     let recording = new Promise(resolve => {
       this.mediaRecorder.addEventListener("stop", () => {
         const blob = new Blob(this.streamData, { type: "audio/wav" });
@@ -38,6 +45,7 @@ export class Recorder {
   }
 
   onDataAvaliable({ data }) {
+    console.log("recieved data:", data);
     this.streamData.push(data);
   }
 

@@ -6,6 +6,11 @@
     </div>
     <div v-else-if="state === 'recording'" class="progress-container"></div>
     <div v-else-if="state === 'transition'" class="transition"></div>
+    <div v-else-if="state === 'error'" class="error-container">
+      <h2>🔇</h2>
+      <p>Please provide mic access. If you didn't deny audio access, your browser might not support audio recording. Try reloading the page.</p>
+      <button class="reload" @click="reloadPage">Reload</button>
+    </div>
     <div v-else class="microphone-box" key="mic">
       <img @click="getAudioSample" class="mic" src="@/assets/microphone.svg" alt="Record" />
       <p class="recording-count">{{ recordingCountLabel }}</p>
@@ -16,7 +21,7 @@
 <script>
 import { CanvasBlob, ProgressRing } from "@/modules/canvas";
 import { Recorder } from "@/modules/Recorder";
-import { tween, delay } from "@/modules/animation";
+import { tween, delay, animateEl } from "@/modules/animation";
 export default {
   data() {
     return {
@@ -37,6 +42,10 @@ export default {
   },
   methods: {
     async getAudioSample() {
+      if (!this.recorder.hasPermission) {
+        let granted = await this.recorder.requestAccess();
+        if (!granted) return (this.state = "error");
+      }
       await this.countDown();
       await this.record();
       this.goToClassify();
@@ -79,11 +88,18 @@ export default {
       this.$router.push("classify");
     },
     onResize() {
+      let { canvas } = this.$refs;
       let blobRadius =
         (Math.min(window.innerWidth, window.innerHeight) * 0.4) / 2;
       let ringRadius = blobRadius * 1.4;
       this.canvasBlob.radius = blobRadius;
       this.progressRing.radius = ringRadius;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      canvas.getContext("2d").translate(canvas.width / 2, canvas.height / 2);
+    },
+    reloadPage() {
+      location.reload();
     }
   },
   mounted() {
@@ -171,6 +187,26 @@ export default {
       100% {
         transform: scale(8);
       }
+    }
+  }
+
+  .error-container {
+    text-align: center;
+    max-width: 500px;
+    padding: 0 30px;
+
+    h2 {
+      font-size: 50px;
+    }
+
+    p {
+      color: white;
+      margin: 30px 0;
+    }
+
+    .reload {
+      color: var(--accent);
+      background: white;
     }
   }
 
