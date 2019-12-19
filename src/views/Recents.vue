@@ -47,6 +47,13 @@ export default {
       cursor: pointer;
       padding: 5px 0;
       margin: 10px 0;
+      transition: border-left 0.7s;
+      border-left: 5px solid transparent;
+      padding-left: 10px;
+
+      &:hover {
+        border-left: 5px solid var(--dark);
+      }
     }
   }
 }
