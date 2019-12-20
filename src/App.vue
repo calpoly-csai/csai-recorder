@@ -13,6 +13,11 @@
   padding: 0;
 }
 
+html,
+body {
+  height: 100%;
+}
+
 #app {
   /*COLOR GUIDE*/
   --dark: #3b3b3b;
@@ -25,19 +30,20 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: var(--dark);
+  height: 100%;
 }
 
 .page {
   display: block;
   width: 100%;
-  height: 100vh;
+  height: 100%;
 }
 
 .content {
   background: white;
   width: 100%;
   max-width: 750px;
-  min-height: 100vh;
+  min-height: 100%;
   padding: 15px 30px;
   margin: 0 auto;
 }

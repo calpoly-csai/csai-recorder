@@ -1,7 +1,7 @@
 <template>
-  <div class="page record-view">
+  <div class="page record-view" @touchmove.prevent>
     <canvas ref="canvas"></canvas>
-    <div v-if="state === 'countdown'" class="countdown-container" key="countdown">
+    <div v-if="state === 'countdown'" class="countdown-container">
       <h2 class="countdown">{{counter}}</h2>
     </div>
     <div v-else-if="state === 'recording'" class="progress-container"></div>
@@ -11,7 +11,7 @@
       <p>Please provide mic access. If you didn't deny audio access, your browser might not support audio recording. Try reloading the page.</p>
       <button class="reload" @click="reloadPage">Reload</button>
     </div>
-    <div v-else class="microphone-box" key="mic">
+    <div v-else class="microphone-container">
       <ion-icon name="mic" class="mic" @click="getAudioSample"></ion-icon>
       <p class="recording-count">{{ recordingCountLabel }}</p>
     </div>
@@ -122,6 +122,7 @@ export default {
 
 <style lang="scss">
 .record-view {
+  height: 100%;
   $circle-diameter: 40vmin;
   background: var(--accent);
   display: flex;
@@ -132,7 +133,7 @@ export default {
   canvas {
     position: absolute;
     width: 100%;
-    height: 100vh;
+    height: 100%;
     pointer-events: none;
   }
 
