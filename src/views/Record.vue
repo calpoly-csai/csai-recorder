@@ -79,7 +79,6 @@ export default {
       this.$store.commit("updateRecording", blob);
       this.progressRing.hide();
       await tween([blobRadius / 10, 0], 500, val => (this.canvasBlob.dr = val));
-
       await this.canvasBlob.stop();
     },
     async goToClassify() {
@@ -137,18 +136,21 @@ export default {
     pointer-events: none;
   }
 
-  .mic {
-    margin: 0 auto;
-    color: white;
-    font-size: 90px;
-    &:active {
-      background: transparent;
-      opacity: 0.8;
+  .microphone-container {
+    text-align: center;
+    .mic {
+      margin: 0 auto;
+      color: white;
+      font-size: 90px;
+      &:active {
+        background: transparent;
+        opacity: 0.8;
+      }
     }
-  }
 
-  .recording-count {
-    color: white;
+    .recording-count {
+      color: white;
+    }
   }
 
   .countdown-container {
