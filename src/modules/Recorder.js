@@ -36,7 +36,7 @@ export class Recorder {
     let recording = new Promise(resolve => {
       this.mediaRecorder.addEventListener("stop", () => {
         const blob = new Blob(this.streamData, {
-          type: "audio/ogg; codecs=opus"
+          type: "audio/wav; codecs=opus"
         });
         resolve(blob);
         this.streamData = [];
