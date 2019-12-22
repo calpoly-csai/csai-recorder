@@ -108,27 +108,23 @@ export default {
       }, 3000);
     },
 
-    postAudio(additionalTakes) {
+    async postAudio(additionalTakes) {
       //Validate inputs.
       if (!this.fieldsAreValid) {
         let { anotherButton, doneButton } = this.$refs;
         let buttonToShake = additionalTakes ? anotherButton : doneButton;
         return animateEl(buttonToShake, "shake");
       }
-      //TODO: Hyphenate values
-      let data = this.fields.reduce((obj, field) => {
-        obj[textToCamelCase(field.label)] = field.value;
-        return obj;
-      }, {});
-      //Construct file.
-      let filename = this.buildFileName(data);
-      //Store data.
-      if (this.wasAutofilled) this.$store.commit("updateParticipant", { data });
-      else this.$store.commit("addParticipant", data);
-      //Increment recording count.
+      let data = this.getAudioMetadata();
+      this.$store.commit("updateParticipant", data);
       this.$store.state.recordingCount++;
-      //TODO: Send Audio
-      console.log("Audio Sent!");
+      //Send Audio
+      let payload = this.aggregatePayload(data);
+      let config = {
+        headers: { "content-type": "multipart/form-data" }
+      };
+      let res = await axios.post("/examples/wakeword", payload, config);
+      console.log(res);
       //Queue autofill if taking another recording.
       if (additionalTakes) {
         data.tone = "";
@@ -136,13 +132,22 @@ export default {
       }
       this.$router.push("/");
     },
-    buildFileName(data) {
-      //Pairs label to value
-      return `${data.category}_${data.noiseLevel}_${data.tone}_${
-        data.location
-      }_${data.gender}_${data.lastName}_${
-        data.firstName
-      }_${Date.now()}_TODO-BUILD-ACCOUNTS`;
+    getAudioMetadata() {
+      return this.fields.reduce((obj, field) => {
+        obj[textToCamelCase(field.label)] = field.value;
+        return obj;
+      }, {});
+    },
+    aggregatePayload(data) {
+      data.isWakeWord = data.category === "ww";
+      data.timestamp = Date.now();
+      delete data.category;
+      let formData = new FormData();
+      formData.append("audio", this.audioBlob);
+      for (let key in data) {
+        formData.append(key, data[key]);
+      }
+      return formData;
     },
     exit() {
       this.$store.commit("eraseRecording");
