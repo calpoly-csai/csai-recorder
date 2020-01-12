@@ -15,9 +15,6 @@ export default new Vuex.Store({
     autofillData: null
   },
   mutations: {
-    addParticipant(state, participant) {
-      state.participants.unshift(participant);
-    },
     updateParticipant(state, data) {
       let match = ({ firstName, lastName }) =>
         firstName === data.firstName && lastName === data.lastName;

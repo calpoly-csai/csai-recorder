@@ -34,6 +34,7 @@ export default {
 <style lang="scss">
 .select-field {
   .label {
+    margin-left: 5px;
     font-size: 12px;
     font-weight: 700;
   }
