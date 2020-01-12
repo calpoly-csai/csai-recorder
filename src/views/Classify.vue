@@ -82,7 +82,8 @@ export default {
           value: ""
         },
         { label: "Location", type: "text", value: "" },
-        { label: "Tone", type: "text", value: "" }
+        { label: "Tone", type: "text", value: "" },
+        { label: "Emphasis", type: "text", value: "" }
       ]
     };
   },
@@ -140,7 +141,7 @@ export default {
     },
     aggregatePayload(data) {
       data.isWakeWord = data.category === "ww";
-      data.timestamp = Date.now();
+      data.timestamp = parseInt(Date.now() / 1000);
       delete data.category;
       let formData = new FormData();
       formData.append("audio", this.audioBlob);
@@ -205,7 +206,7 @@ export default {
     padding: 20px 10px;
 
     .field {
-      margin: 20px 0;
+      margin: 10px 0;
     }
   }
 }
