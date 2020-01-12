@@ -122,12 +122,15 @@ export default {
       this.$store.commit("updateParticipant", data);
       this.$store.state.recordingCount++;
       //Send Audio
-      let payload = this.aggregatePayload(data);
-      let config = {
-        headers: { "content-type": "multipart/form-data" }
-      };
-      let res = await axios.post("/examples/wakeword", payload, config);
-      console.log(res);
+
+      if (navigator.onLine) {
+        let payload = this.aggregatePayload(data);
+        let config = {
+          headers: { "content-type": "multipart/form-data" }
+        };
+        // await axios.post("/examples/wakeword", payload, config);
+        console.log("Posted sample to the CSAI Database!");
+      } else await this.cacheData(data);
       //Queue autofill if taking another recording.
       if (additionalTakes) {
         data.tone = "";
@@ -142,6 +145,8 @@ export default {
       }, {});
     },
     aggregatePayload(data) {
+      //Create clone of data object so we don't mutate the original.
+      data = { ...data };
       data.isWakeWord = data.category === "ww";
       data.timestamp = parseInt(Date.now() / 1000);
       delete data.category;
@@ -166,8 +171,12 @@ export default {
 
       this.wasAutofilled = true;
       this.$store.commit("updateAutofillData", null);
+    },
+    cacheData(data) {
+      console.log("Since you aren't online, I'll cache the data");
     }
   },
+
   mounted() {
     if (this.$store.state.autofillData) this.autofill();
     this.setupAudio();
