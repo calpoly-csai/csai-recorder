@@ -12,7 +12,12 @@ export default new Vuex.Store({
     /**Information of recent participants (cleared when app exits)*/
     participants: [],
     /**Data to autofill the Classify page */
-    autofillData: null
+    autofillData: null,
+    /**System based notifications to the user*/
+    infoBar: {
+      text: "Hi there",
+      isShown: false
+    }
   },
   mutations: {
     updateParticipant(state, data) {
@@ -30,8 +35,16 @@ export default new Vuex.Store({
     },
     updateAutofillData(state, data) {
       state.autofillData = data;
+    },
+    updateInfoBar(state, { text, isShown }) {
+      if (text) state.infoBar.text = text;
+      if (isShown !== undefined) state.infoBar.isShown = isShown;
     }
   },
-  actions: {},
-  modules: {}
+  actions: {
+    /**
+     * Takes all cached samples in local IndexDB storage and uploads them to the CSAI server
+     */
+    uploadCachedSamples() {}
+  }
 });
