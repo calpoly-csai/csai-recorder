@@ -3,8 +3,17 @@
     <transition name="fade" mode="out-in">
       <router-view />
     </transition>
+    <info-bar></info-bar>
   </div>
 </template>
+<script>
+import InfoBar from "@/components/InfoBar";
+export default {
+  components: {
+    InfoBar
+  }
+};
+</script>
 
 <style lang="scss">
 * {
