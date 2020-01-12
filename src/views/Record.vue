@@ -70,7 +70,9 @@ export default {
       this.progressRing.show();
       tween([0, 1], 3000, val => {
         this.progressRing.progress = val;
-        let opacity = Math.min((0.5 - Math.abs(val - 0.5)) * 4, 1);
+        let opacity;
+        if (val <= 0.25) opacity = 4 * val;
+        else if (val > 0.9) opacity = (1 - val) * 10;
         this.progressRing.opacity = opacity;
       });
       this.recorder.start();
