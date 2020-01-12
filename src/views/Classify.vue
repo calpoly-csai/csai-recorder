@@ -23,8 +23,10 @@
             :choices="field.choices"
           ></select-field>
         </div>
-        <button @click="postAudio(true)" ref="anotherButton">Another</button>
-        <button @click="postAudio(false)" ref="doneButton">Done</button>
+        <div class="options">
+          <button @click="postAudio(true)" ref="anotherButton">Another</button>
+          <button @click="postAudio(false)" ref="doneButton">Done</button>
+        </div>
       </form>
     </div>
   </div>
@@ -207,6 +209,9 @@ export default {
 
     .field {
       margin: 10px 0;
+    }
+    .options {
+      margin-top: 40px;
     }
   }
 }
