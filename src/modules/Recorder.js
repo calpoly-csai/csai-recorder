@@ -52,7 +52,7 @@ export class Recorder {
   }
 
   destroy() {
-    this.mediaRecorder.ondataavailable = null;
+    if (this.mediaRecorder) this.mediaRecorder.ondataavailable = null;
   }
   isSupported() {
     return navigator.mediaDevices.getUserMedia && window.MediaRecorder;
