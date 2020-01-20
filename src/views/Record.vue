@@ -46,6 +46,7 @@ export default {
         let granted = await this.recorder.requestAccess();
         if (!granted) return (this.state = "error");
       }
+      this.$emit("showMenu", false);
       await this.countDown();
       await this.record();
       this.goToClassify();
@@ -104,6 +105,7 @@ export default {
     }
   },
   mounted() {
+    this.$emit("showMenu", true);
     let { canvas } = this.$refs;
     let blobRadius =
       (Math.min(window.innerWidth, window.innerHeight) * 0.4) / 2;
