@@ -33,6 +33,9 @@ export default {
       this.$store.commit("updateAutofillData", this.participants[index]);
       this.$router.push("/classify");
     }
+  },
+  mounted() {
+    this.$emit("showMenu", false);
   }
 };
 </script>
