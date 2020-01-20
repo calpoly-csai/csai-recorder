@@ -23,7 +23,7 @@ export default {
   background: white;
 
   position: fixed;
-  bottom: 0;
+  top: 0;
   left: 0;
   width: 100%;
   .info {
@@ -38,7 +38,7 @@ export default {
 
   &-enter,
   &-leave-to {
-    transform: translateY(100%);
+    transform: translateY(-100%);
     opacity: 0;
   }
 }
