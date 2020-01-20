@@ -178,6 +178,7 @@ export default {
   },
 
   mounted() {
+    this.$emit("showMenu", false);
     if (this.$store.state.autofillData) this.autofill();
     this.setupAudio();
   },
