@@ -1,16 +1,32 @@
 <template>
   <div id="app">
     <transition name="fade" mode="out-in">
-      <router-view />
+      <router-view @showMenu="toggleMenu" />
     </transition>
+    <transition name="hide" mode="out-in">
+      <app-menu v-if="menuShown"></app-menu>
+    </transition>
+
     <info-bar></info-bar>
   </div>
 </template>
 <script>
 import InfoBar from "@/components/InfoBar";
+import AppMenu from "@/components/Menu";
 export default {
   components: {
+    AppMenu,
     InfoBar
+  },
+  data() {
+    return {
+      menuShown: true
+    };
+  },
+  methods: {
+    toggleMenu(show) {
+      this.menuShown = show;
+    }
   }
 };
 </script>
@@ -30,9 +46,10 @@ body {
 #app {
   /*COLOR GUIDE*/
   --dark: #3b3b3b;
-  --accent: #419bc6;
+  --accent: #22a7e6;
   --light: white;
   --secondary: #a3a3a3;
+  --menu-height: 65px;
 
   font-family: "Karla", Helvetica, Arial, sans-serif;
   font-size: 20px;
@@ -46,6 +63,10 @@ body {
   display: block;
   width: 100%;
   height: 100%;
+}
+
+.with-menu {
+  padding-bottom: var(--menu-height);
 }
 
 .content {
@@ -91,7 +112,6 @@ ion-icon {
 
   &:active {
     transform: scale(0.95);
-    background: whitesmoke;
   }
 }
 
@@ -102,6 +122,40 @@ nav {
   padding: 5px;
   margin-bottom: 30px;
   border-bottom: 1px solid var(--secondary);
+}
+
+.menu-icon {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  padding: 15px;
+  width: 70px;
+  height: 70px;
+  background: white;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.226);
+  border-radius: 50%;
+  transform: scale(0.8);
+  opacity: 0;
+  transition: all 0.5s;
+  pointer-events: none;
+
+  &.show {
+    pointer-events: all;
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+//Responsive Queries
+//=====================================================
+
+@media screen and (min-width: 700px) {
+  .menu-icon {
+    bottom: auto;
+    right: auto;
+    top: 20px;
+    left: 20px;
+  }
 }
 
 //ANIMATIONS
@@ -115,6 +169,18 @@ nav {
   &-enter,
   &-leave-to {
     opacity: 0;
+  }
+}
+
+.hide {
+  &-enter-active,
+  &-leave-active {
+    transition: transform 0.5s;
+  }
+
+  &-enter,
+  &-leave-to {
+    transform: translateY(100%);
   }
 }
 
