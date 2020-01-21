@@ -2,17 +2,33 @@
   <div class="phrases page">
     <div class="content">
       <h1 class="title">Phrases</h1>
-      <h3 class="tokenizer-label">Question</h3>
-      <tokenizer :state="tokenizerState" v-model="question" :label="label" @split="label = ''"></tokenizer>
-      <h3 class="tokenizer-label">Answer</h3>
-      <tokenizer :state="tokenizerState" v-model="answer" :label="label" @split="label = ''"></tokenizer>
-      <transition-group name="fase">
-        <button v-if="!isTokenizing" @click="tokenize" key="tokenize">Tokenize</button>
-        <button v-if="isTokenizing" @click="uploadPhrase" key="submit">Submit</button>
-        <button v-if="isTokenizing" @click="editText" key="edit">Edit</button>
-      </transition-group>
+      <div class="text-editor" v-if="isEditing">
+        <h3 class="field-label">Question</h3>
+        <div
+          class="text-input"
+          ref="questionInput"
+          contenteditable="true"
+          @input="question = $event.target.innerText"
+        ></div>
+        <h3 class="field-label">Answer</h3>
+        <div
+          class="text-input"
+          ref="answerInput"
+          contenteditable="true"
+          @input="answer = $event.target.innerText"
+        ></div>
+        <button @click="tokenize">Tokenize</button>
+      </div>
+      <div v-else class="tokenizers">
+        <h3 class="field-label">Question</h3>
+        <tokenizer :text="question" :label="label" @input="tokenizedQuestion = $event"></tokenizer>
+        <h3 class="field-label">Answer</h3>
+        <tokenizer :text="answer" :label="label" @input="tokenizedAnswer = $event"></tokenizer>
+        <button @click="uploadPhrase" key="submit">Submit</button>
+        <button @click="editText" key="edit">Edit</button>
+      </div>
     </div>
-    <div class="classifier" v-if="tokenizerState == 'token' ">
+    <div class="classifier" v-if="!isEditing">
       <div class="label" v-for="label in labels" :key="label" @click="setLabel(label)">{{label}}</div>
     </div>
   </div>
@@ -28,29 +44,37 @@ export default {
   data() {
     return {
       label: "",
-      tokenizerState: "edit",
-      question: { text: "", tokens: [] },
-      answer: { text: "" },
+      isEditing: true,
+      question: "",
+      answer: "",
+      tokenizedQuestion: { text: "", tokens: [] },
+      tokenizedAnswer: { text: "" },
       labels: ["Office Hours", "Professor", "Classrooms"]
     };
   },
-  computed: {
-    isTokenizing() {
-      return this.tokenizerState == "token";
-    }
-  },
   methods: {
     tokenize() {
-      this.tokenizerState = "token";
+      this.isEditing = false;
       this.$emit("showMenu", false);
     },
     editText() {
-      this.tokenizerState = "edit";
+      this.isEditing = true;
       this.$emit("showMenu", true);
+      //TODO: build better solution for responsively replacing text
+      setTimeout(() => {
+        let { questionInput, answerInput } = this.$refs;
+        questionInput.innerText = this.question;
+        answerInput.innerText = this.answer;
+      }, 100);
     },
     uploadPhrase() {
-      let payload = { quesiton: this.question, answer: this.answer };
-      this.tokenizerState = "edit";
+      let payload = {
+        quesiton: this.tokenizedQuestion,
+        answer: this.tokenizedAnswer
+      };
+      this.question = "";
+      this.answer = "";
+      this.isEditing = true;
       this.$emit("showMenu", true);
     },
     setLabel(label) {
@@ -65,6 +89,15 @@ export default {
   .content {
     .title {
       margin: 20px 0;
+    }
+    .text-editor {
+      .text-input {
+        padding: 15px;
+        border-radius: 7px;
+        background: whitesmoke;
+        max-height: 200px;
+        overflow-y: scroll;
+      }
     }
 
     h3 {

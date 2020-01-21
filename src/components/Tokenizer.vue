@@ -1,25 +1,13 @@
 <template>
   <div class="tokenizer">
-    <transition name="swap" mode="out-in">
-      <div
-        class="text-input"
-        ref="textInput"
-        key="textInput"
-        v-if="state == 'edit'"
-        contenteditable="true"
-        @input="text = $event.target.innerText"
-      ></div>
-      <div v-else class="tokens" key="tokens">
-        <div v-for="(token, index) in tokens" class="token">
-          <h4 class="label">{{token.label}}</h4>
-          <p
-            class="text"
-            @click="selectToken(index)"
-            :class="{selected: selectedIndicies.includes(index)}"
-          >{{token.text}}</p>
-        </div>
-      </div>
-    </transition>
+    <div v-for="(token, index) in tokens" class="token">
+      <h4 class="label">{{token.label}}</h4>
+      <p
+        class="text"
+        @click="selectToken(index)"
+        :class="{selected: selectedIndicies.includes(index)}"
+      >{{token.text}}</p>
+    </div>
   </div>
 </template>
 
@@ -27,17 +15,16 @@
 export default {
   props: {
     /**
-     * Enum state of the field: "edit", "token"
-     */
-    state: String,
-    /**
      * Current label being applied. Triggered on label change
      */
-    label: String
+    label: String,
+    /**
+     * Text to tokenize
+     */
+    text: String
   },
   data() {
     return {
-      text: "",
       tokens: [],
       selectedIndicies: []
     };
@@ -45,15 +32,6 @@ export default {
   watch: {
     label(val) {
       if (val) this.labelToken(val);
-    },
-    state(val) {
-      console.log("state val:", val);
-      if (val === "token") this.tokenizeText();
-      else if (val === "edit") {
-        setTimeout(() => {
-          this.$refs.textInput.innerText = this.text;
-        }, 1000);
-      }
     }
   },
   methods: {
@@ -103,6 +81,7 @@ export default {
         },
         { label: "", text: "" }
       );
+      combinedToken.text = combinedToken.text.trim();
       this.tokens.splice(start, end - start + 1, combinedToken);
     },
     splitToken(index) {
@@ -124,47 +103,42 @@ export default {
       this.selectedIndicies = [];
       this.updateState();
     }
+  },
+  mounted() {
+    this.tokenizeText();
   }
 };
 </script>
 
 <style lang="scss">
 .tokenizer {
-  .text-input {
-    padding: 15px;
-    border-radius: 7px;
-    background: whitesmoke;
-    max-height: 200px;
-    overflow-y: scroll;
-  }
-  .tokens {
-    display: flex;
-    justify-content: flex-start;
-    width: 100%;
-    padding: 3px 15px;
-    flex-wrap: wrap;
-    .token {
-      cursor: pointer;
-      width: min-content;
-      margin: 5px 15px;
-      margin-block-start: auto;
-      .label {
-        font-size: 12px;
-        white-space: nowrap;
-        color: #696969;
-        margin-left: 7px;
-      }
-      .text {
-        text-align: center;
-        padding: 10px;
-        border-radius: 7px;
-        border: 1px solid var(--dark);
-        white-space: nowrap;
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 3px 15px;
+  flex-wrap: wrap;
 
-        &.selected {
-          background: var(--dark);
-          color: white;
-        }
+  .token {
+    cursor: pointer;
+    width: min-content;
+    margin: 5px 15px;
+    margin-block-start: auto;
+    .label {
+      font-size: 12px;
+      white-space: nowrap;
+      color: #696969;
+      margin-left: 7px;
+    }
+    .text {
+      text-align: center;
+      padding: 10px;
+      border-radius: 7px;
+      border: 1px solid var(--dark);
+      white-space: nowrap;
+
+      &.selected {
+        background: var(--dark);
+        color: white;
       }
     }
   }
