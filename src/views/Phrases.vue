@@ -37,6 +37,7 @@
 <script>
 import Tokenizer from "@/components/Tokenizer";
 import { animateEl } from "@/modules/animation";
+import tokens from "@/modules/classification-tokens";
 export default {
   components: {
     Tokenizer
@@ -48,8 +49,8 @@ export default {
       question: "",
       answer: "",
       tokenizedQuestion: { text: "", tokens: [] },
-      tokenizedAnswer: { text: "" },
-      labels: ["Office Hours", "Professor", "Classrooms"]
+      tokenizedAnswer: { text: "", tokens: [] },
+      labels: Object.keys(tokens)
     };
   },
   methods: {
@@ -72,6 +73,7 @@ export default {
         quesiton: this.tokenizedQuestion,
         answer: this.tokenizedAnswer
       };
+      console.log("payload:", payload);
       this.question = "";
       this.answer = "";
       this.isEditing = true;
@@ -79,6 +81,10 @@ export default {
     },
     setLabel(label) {
       this.label = label;
+      //Clear the token in case it is selected again. Watchers don't update unless the value is different.
+      setTimeout(() => {
+        this.label = "";
+      }, 100);
     }
   }
 };
