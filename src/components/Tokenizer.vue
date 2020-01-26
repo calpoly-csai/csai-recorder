@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import tokens from "@/modules/classification-tokens";
 export default {
   props: {
     /**
@@ -62,7 +63,7 @@ export default {
       let payload = this.tokens.reduce(
         (payload, token) => {
           if (token.label) {
-            payload.text += `[${token.label}] `;
+            payload.text += `[${tokens[token.label]}] `;
             payload.values.push(token.text);
           } else payload.text += `${token.text} `;
           return payload;
