@@ -164,6 +164,7 @@ nav {
   &-enter-active,
   &-leave-active {
     transition: opacity 0.5s;
+    pointer-events: none;
   }
 
   &-enter,
