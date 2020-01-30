@@ -2,13 +2,16 @@
   <div class="page record-view" @touchmove.prevent>
     <canvas ref="canvas"></canvas>
     <div v-if="state === 'countdown'" class="countdown-container">
-      <h2 class="countdown">{{counter}}</h2>
+      <h2 class="countdown">{{ counter }}</h2>
     </div>
     <div v-else-if="state === 'recording'" class="progress-container"></div>
     <div v-else-if="state === 'transition'" class="transition"></div>
     <div v-else-if="state === 'error'" class="error-container">
       <h2>🔇</h2>
-      <p>Please provide mic access. If you didn't deny audio access, your browser might not support audio recording. Try reloading the page.</p>
+      <p>
+        Please provide mic access. If you didn't deny audio access, your browser
+        might not support audio recording. Try reloading the page.
+      </p>
       <button class="reload" @click="reloadPage">Reload</button>
     </div>
     <div v-else class="microphone-container">
@@ -20,12 +23,12 @@
 
 <script>
 import { CanvasBlob, ProgressRing } from "@/modules/canvas";
-import { Recorder } from "@/modules/Recorder";
 import { tween, delay, animateEl } from "@/modules/animation";
+import Recorder from "recorder-js";
 export default {
   data() {
     return {
-      recorder: new Recorder(),
+      recorder: null,
       canvasBlob: null,
       progressRing: null,
       state: "standby",
@@ -42,10 +45,20 @@ export default {
   },
   methods: {
     async getAudioSample() {
-      if (!this.recorder.hasPermission) {
-        let granted = await this.recorder.requestAccess();
-        if (!granted) return (this.state = "error");
+      let stream;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          audio: true
+        });
+      } catch (err) {
+        console.log(err);
+        return (this.state = "error");
       }
+      let context = new (window.AudioContext || window.webkitAudioContext)({
+        sampleRate: 16000
+      });
+      this.recorder = new Recorder(context);
+      this.recorder.init(stream);
       this.$emit("showMenu", false);
       await this.countDown();
       await this.record();
@@ -76,10 +89,10 @@ export default {
         else if (val > 0.9) opacity = (1 - val) * 10;
         this.progressRing.opacity = opacity;
       });
-      this.recorder.start();
+      await this.recorder.start();
       await delay(3000);
-      let blob = await this.recorder.stop();
-      this.$store.commit("updateRecording", blob);
+      let payload = await this.recorder.stop();
+      this.$store.commit("updateRecording", payload.blob);
       this.progressRing.hide();
       await tween([blobRadius / 10, 0], 500, val => (this.canvasBlob.dr = val));
       await this.canvasBlob.stop();
@@ -118,7 +131,6 @@ export default {
   },
   beforeDestroy() {
     window.removeEventListener("resize", this.onResize);
-    this.recorder.destroy();
   }
 };
 </script>

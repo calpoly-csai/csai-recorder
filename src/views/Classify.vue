@@ -15,7 +15,11 @@
 
       <form @submit.prevent>
         <div class="field" v-for="field in fields" :key="field.label">
-          <text-field v-if="field.type === 'text'" v-model="field.value" :label="field.label"></text-field>
+          <text-field
+            v-if="field.type === 'text'"
+            v-model="field.value"
+            :label="field.label"
+          ></text-field>
           <select-field
             v-else-if="field.type === 'select'"
             v-model="field.value"
@@ -151,7 +155,7 @@ export default {
       data.timestamp = parseInt(Date.now() / 1000);
       delete data.category;
       let formData = new FormData();
-      formData.append("audio", this.audioBlob);
+      formData.append("wav_file", this.audioBlob);
       for (let key in data) {
         formData.append(key, data[key]);
       }
