@@ -39,6 +39,7 @@ export default {
       progressRing: null,
       /**
        * Controls animation state on screen
+       * @enum {"standby", "countdown", "recording","transition", "error"}
        */
       state: "standby",
       /**
