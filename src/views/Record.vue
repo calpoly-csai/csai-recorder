@@ -29,13 +29,29 @@ export default {
   data() {
     return {
       recorder: null,
+      /**
+       * Class which controls the amorphous central circle canvas element
+       */
       canvasBlob: null,
+      /**
+       * Class which controls the timing ring during the recording
+       */
       progressRing: null,
+      /**
+       * Controls animation state on screen
+       */
       state: "standby",
+      /**
+       * Countdown to recording
+       */
       counter: 3
     };
   },
   computed: {
+    /**
+     * @type String
+     * Displays number of recordings taken in the session
+     */
     recordingCountLabel() {
       let { recordingCount } = this.$store.state;
       if (recordingCount > 1) return `${recordingCount} Recordings`;
@@ -44,6 +60,9 @@ export default {
     }
   },
   methods: {
+    /**
+     * Performs the recording sequence and then transitions to the Classify page
+     */
     async getAudioSample() {
       let stream;
       try {
@@ -64,6 +83,10 @@ export default {
       await this.record();
       this.goToClassify();
     },
+    /**
+     * Plays countdown animation
+     * @returns promise
+     */
     async countDown() {
       this.state = "countdown";
       let numbers = [3, 2, 1];
@@ -72,6 +95,11 @@ export default {
         await delay(1000);
       }
     },
+    async presentPrompt() {},
+    /**
+     * Presents the duration animation and recrods audio
+     * @returns promise
+     */
     async record() {
       this.state = "recording";
       let blobRadius =
@@ -97,11 +125,17 @@ export default {
       await tween([blobRadius / 10, 0], 500, val => (this.canvasBlob.dr = val));
       await this.canvasBlob.stop();
     },
+    /**
+     * Plays transition animation and then routes user to the Classify page
+     */
     async goToClassify() {
       this.state = "transition";
       await delay(1000);
       this.$router.push("classify");
     },
+    /**
+     * Resizes canvas elements when browser window dimensions change
+     */
     onResize() {
       let { canvas } = this.$refs;
       let blobRadius =
@@ -120,6 +154,7 @@ export default {
   mounted() {
     this.$emit("showMenu", true);
     let { canvas } = this.$refs;
+    //Set the canvas element sizes based on current window dimensions
     let blobRadius =
       (Math.min(window.innerWidth, window.innerHeight) * 0.4) / 2;
     let ringRadius = blobRadius * 1.4;
@@ -127,9 +162,11 @@ export default {
     canvas.height = window.innerHeight;
     this.canvasBlob = new CanvasBlob(canvas, blobRadius);
     this.progressRing = new ProgressRing(canvas, ringRadius);
+    //Add resize listener to handle window dimension changes
     window.addEventListener("resize", this.onResize);
   },
   beforeDestroy() {
+    //Clear event listeners to recover performance
     window.removeEventListener("resize", this.onResize);
   }
 };
