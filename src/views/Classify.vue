@@ -19,6 +19,7 @@
             v-if="field.type === 'text'"
             v-model="field.value"
             :label="field.label"
+            v-bind="field.options"
           ></text-field>
           <select-field
             v-else-if="field.type === 'select'"
@@ -89,7 +90,14 @@ export default {
         },
         { label: "Location", type: "text", value: "" },
         { label: "Tone", type: "text", value: "" },
-        { label: "Emphasis", type: "text", value: "" }
+        {
+          label: "Emphasis",
+          type: "text",
+          value: "",
+          options: {
+            maxLength: 3
+          }
+        }
       ]
     };
   },
