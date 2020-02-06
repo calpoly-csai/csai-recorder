@@ -140,7 +140,9 @@ export default {
         let config = {
           headers: { "content-type": "multipart/form-data" }
         };
-        // await axios.post("/examples/wakeword", payload, config);
+        axios
+          .post("/new_data/ww_temp_storage", payload, config)
+          .catch(err => console.error(err));
         console.log("Posted sample to the CSAI Database!");
       } else await this.cacheData(data);
       //Queue autofill if taking another recording.
