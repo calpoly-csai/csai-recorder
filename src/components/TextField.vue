@@ -3,6 +3,7 @@
     <p class="label" :class="{ shown: showLabel }">{{ label }}</p>
     <input
       :value="value"
+      :maxlength="maxLength"
       @input="$emit('input', $event.target.value)"
       @blur="$emit('blur', $event)"
       :placeholder="label"
@@ -26,6 +27,9 @@ export default {
     invalid: {
       type: Boolean,
       default: false
+    },
+    maxLength: {
+      type: Number
     },
     errorMessage: String,
     value: String
