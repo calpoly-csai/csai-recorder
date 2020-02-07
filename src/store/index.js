@@ -51,13 +51,18 @@ export default new Vuex.Store({
      * Uploads Wake Word audio data to the CSAI server
      * @param {FormData} payload The audio sample bundled with its metadata
      */
-    uploadAudioSample(_, payload) {
+    async uploadAudioSample(_, payload) {
       let config = {
         headers: { "content-type": "multipart/form-data" }
       };
-      axios
-        .post("/new_data/ww_temp_storage", payload, config)
-        .catch(err => console.error(err));
+      try {
+        await axios
+          .post("/new_data/ww_temp_storage", payload, config)
+          .catch(err => console.error(err));
+      } catch (err) {
+        console.log(err);
+        return;
+      }
       console.log("Posted sample to the CSAI Database!");
     }
   }

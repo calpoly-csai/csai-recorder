@@ -1,12 +1,14 @@
 <template>
   <div class="tokenizer">
     <div v-for="(token, index) in tokens" class="token">
-      <h4 class="label">{{token.label}}</h4>
+      <h4 class="label">{{ token.label }}</h4>
       <p
         class="text"
         @click="selectToken(index)"
-        :class="{selected: selectedIndicies.includes(index)}"
-      >{{token.text}}</p>
+        :class="{ selected: selectedIndicies.includes(index) }"
+      >
+        {{ token.text }}
+      </p>
     </div>
   </div>
 </template>
@@ -97,7 +99,6 @@ export default {
       this.$emit("split");
     },
     labelToken(label) {
-      console.log("label token");
       for (let index of this.selectedIndicies) {
         this.tokens[index].label = label;
       }

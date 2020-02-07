@@ -34,7 +34,6 @@ export default {
       animateEl(this.$refs.shuffle, "spin");
     },
     selectAll() {
-      console.log("test");
       var range = document.createRange();
       range.selectNodeContents(this.$refs.word);
       var sel = window.getSelection();
