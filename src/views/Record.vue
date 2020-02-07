@@ -15,6 +15,7 @@
       <button class="reload" @click="reloadPage">Reload</button>
     </div>
     <div v-else class="microphone-container">
+      <word-card @update="word = $event"></word-card>
       <ion-icon name="mic" class="mic" @click="getAudioSample"></ion-icon>
       <p class="recording-count">{{ recordingCountLabel }}</p>
     </div>
@@ -24,27 +25,27 @@
 <script>
 import { CanvasBlob, ProgressRing } from "@/modules/canvas";
 import { tween, delay, animateEl } from "@/modules/animation";
+import WordCard from "@/components/WordCard";
 import Recorder from "recorder-js";
 export default {
+  components: {
+    WordCard
+  },
   data() {
     return {
+      /** The word that the user will speak into the mic*/
+      word: "",
       recorder: null,
-      /**
-       * Class which controls the amorphous central circle canvas element
-       */
+      /**Class which controls the amorphous central circle canvas element*/
       canvasBlob: null,
-      /**
-       * Class which controls the timing ring during the recording
-       */
+      /**Class which controls the timing ring during the recording*/
       progressRing: null,
       /**
        * Controls animation state on screen
        * @enum {"standby", "countdown", "recording","transition", "error"}
        */
       state: "standby",
-      /**
-       * Countdown to recording
-       */
+      /**Countdown to recording*/
       counter: 3
     };
   },
@@ -61,10 +62,8 @@ export default {
     }
   },
   methods: {
-    /**
-     * Performs the recording sequence and then transitions to the Classify page
-     */
-    async getAudioSample() {
+    /**Asks user for mic permission and sets up recorder.*/
+    async prepareAudio() {
       let stream;
       try {
         stream = await navigator.mediaDevices.getUserMedia({
@@ -74,11 +73,15 @@ export default {
         console.log(err);
         return (this.state = "error");
       }
+
       let context = new (window.AudioContext || window.webkitAudioContext)({
         sampleRate: 16000
       });
       this.recorder = new Recorder(context);
       this.recorder.init(stream);
+    },
+    /**Performs the recording sequence and then transitions to the Classify page*/
+    async getAudioSample() {
       this.$emit("showMenu", false);
       await this.countDown();
       await this.record();
@@ -96,9 +99,8 @@ export default {
         await delay(1000);
       }
     },
-    async presentPrompt() {},
     /**
-     * Presents the duration animation and recrods audio
+     * Presents the duration animation and records audio
      * @returns promise
      */
     async record() {
@@ -126,17 +128,13 @@ export default {
       await tween([blobRadius / 10, 0], 500, val => (this.canvasBlob.dr = val));
       await this.canvasBlob.stop();
     },
-    /**
-     * Plays transition animation and then routes user to the Classify page
-     */
+    /**Plays transition animation and then routes user to the Classify page*/
     async goToClassify() {
       this.state = "transition";
       await delay(1000);
       this.$router.push("classify");
     },
-    /**
-     * Resizes canvas elements when browser window dimensions change
-     */
+    /**Resizes canvas elements when browser window dimensions change*/
     onResize() {
       let { canvas } = this.$refs;
       let blobRadius =
@@ -150,20 +148,23 @@ export default {
     },
     reloadPage() {
       location.reload();
+    },
+    /**Calculates starting sizes of the the nimbus animation and the progress ring.*/
+    prepareCanvasElements() {
+      let { canvas } = this.$refs;
+      let blobRadius =
+        (Math.min(window.innerWidth, window.innerHeight) * 0.4) / 2;
+      let ringRadius = blobRadius * 1.4;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      this.canvasBlob = new CanvasBlob(canvas, blobRadius);
+      this.progressRing = new ProgressRing(canvas, ringRadius);
     }
   },
   mounted() {
     this.$emit("showMenu", true);
-    let { canvas } = this.$refs;
-    //Set the canvas element sizes based on current window dimensions
-    let blobRadius =
-      (Math.min(window.innerWidth, window.innerHeight) * 0.4) / 2;
-    let ringRadius = blobRadius * 1.4;
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    this.canvasBlob = new CanvasBlob(canvas, blobRadius);
-    this.progressRing = new ProgressRing(canvas, ringRadius);
-    //Add resize listener to handle window dimension changes
+    this.prepareCanvasElements();
+    this.prepareAudio();
     window.addEventListener("resize", this.onResize);
   },
   beforeDestroy() {
@@ -196,6 +197,10 @@ export default {
       margin: 0 auto;
       color: white;
       font-size: 90px;
+
+      line {
+        stroke: white;
+      }
       &:active {
         background: transparent;
         opacity: 0.8;
