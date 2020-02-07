@@ -1,7 +1,12 @@
 <template>
   <div class="word-card">
     <span class="text">Say </span
-    ><span class="word" ref="word" contenteditable="true" @blur="updateWord"
+    ><span
+      class="word"
+      ref="word"
+      contenteditable="true"
+      @blur="updateWord"
+      @click="selectAll"
       >Nimbus</span
     >
     <ion-icon
@@ -25,7 +30,16 @@ export default {
     randomizeWord() {
       let index = (words.length * Math.random()) >> 0;
       this.$refs.word.innerText = words[index];
+      this.$emit("update", words[index]);
       animateEl(this.$refs.shuffle, "spin");
+    },
+    selectAll() {
+      console.log("test");
+      var range = document.createRange();
+      range.selectNodeContents(this.$refs.word);
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
     }
   }
 };
@@ -33,7 +47,6 @@ export default {
 
 <style lang="scss">
 .word-card {
-  max-width: 90%;
   width: 400px;
   background: white;
   padding: 20px;
@@ -66,6 +79,12 @@ export default {
         }
       }
     }
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .word-card {
+    width: auto;
   }
 }
 </style>

@@ -4,7 +4,6 @@ export default [
   "slimness",
   "Columbus",
   "pinnace",
-  "skinless",
   "symbol",
   "timber",
   "nimble",
@@ -60,7 +59,6 @@ export default [
   "tigress",
   "gymnast",
   "litigious",
-  "limites",
   "witless",
   "perspicuous",
   "aliveness",
@@ -70,5 +68,6 @@ export default [
   "simba",
   "liveness",
   "familiarise",
-  "flotillas"
+  "flotillas",
+  "skinless"
 ];

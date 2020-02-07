@@ -34,7 +34,7 @@ export default {
   data() {
     return {
       /** The word that the user will speak into the mic*/
-      word: "",
+      word: "Nimbus",
       recorder: null,
       /**Class which controls the amorphous central circle canvas element*/
       canvasBlob: null,
@@ -132,7 +132,8 @@ export default {
     async goToClassify() {
       this.state = "transition";
       await delay(1000);
-      this.$router.push("classify");
+      let isWakeWord = this.word.toLowerCase().trim() === "nimbus";
+      this.$router.push({ name: "classify", params: { isWakeWord } });
     },
     /**Resizes canvas elements when browser window dimensions change*/
     onResize() {
@@ -197,6 +198,7 @@ export default {
       margin: 0 auto;
       color: white;
       font-size: 90px;
+      margin-top: 30px;
 
       line {
         stroke: white;

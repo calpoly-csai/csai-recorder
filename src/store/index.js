@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-
+import axios from "axios";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -42,9 +42,23 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    /** Takes all cached samples in local IndexDB storage and uploads them to the CSAI server*/
+    cacheData() {
+      //TODO: Use index db to cache data
+      console.log("Since you aren't online, I'll cache the data");
+    },
     /**
-     * Takes all cached samples in local IndexDB storage and uploads them to the CSAI server
+     * Uploads Wake Word audio data to the CSAI server
+     * @param {FormData} payload The audio sample bundled with its metadata
      */
-    uploadCachedSamples() {}
+    uploadAudioSample(_, payload) {
+      let config = {
+        headers: { "content-type": "multipart/form-data" }
+      };
+      axios
+        .post("/new_data/ww_temp_storage", payload, config)
+        .catch(err => console.error(err));
+      console.log("Posted sample to the CSAI Database!");
+    }
   }
 });

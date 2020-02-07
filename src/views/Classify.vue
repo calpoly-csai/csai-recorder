@@ -40,13 +40,18 @@
 <script>
 import TextField from "@/components/TextField";
 import SelectField from "@/components/SelectField";
-import axios from "axios";
 import { textFromCamelCase, textToCamelCase } from "@/modules/parser";
 import { animateEl } from "@/modules/animation";
 export default {
   components: {
     TextField,
     SelectField
+  },
+  props: {
+    isWakeWord: {
+      required: true,
+      type: Boolean
+    }
   },
   data() {
     return {
@@ -58,15 +63,6 @@ export default {
       wasAutofilled: false,
 
       fields: [
-        {
-          label: "Category",
-          type: "select",
-          choices: [
-            { label: "Wake Word", value: "ww" },
-            { label: "Not Wake Word", value: "nww" }
-          ],
-          value: ""
-        },
         { label: "First Name", type: "text", value: "" },
         { label: "Last Name", type: "text", value: "" },
         {
@@ -74,7 +70,8 @@ export default {
           type: "select",
           choices: [
             { label: "Male", value: "m" },
-            { label: "Female", value: "f" }
+            { label: "Female", value: "f" },
+            { label: "Other", value: "nb" }
           ],
           value: ""
         },
@@ -89,9 +86,21 @@ export default {
           value: ""
         },
         { label: "Location", type: "text", value: "" },
-        { label: "Tone", type: "text", value: "" },
         {
-          label: "Emphasis",
+          label: "Tone",
+          type: "select",
+          choices: [
+            { label: "Annoyed", value: "annoyed" },
+            { label: "Happy", value: "happy" },
+            { label: "Inquisitive", value: "inquisitive" },
+            { label: "Neutral", value: "neutral" },
+            { label: "Serious", value: "serious" },
+            { label: "Stern", value: "stern" }
+          ],
+          value: ""
+        },
+        {
+          label: "Emphasized Syllable",
           type: "text",
           value: "",
           options: {
@@ -130,25 +139,19 @@ export default {
         let buttonToShake = additionalTakes ? anotherButton : doneButton;
         return animateEl(buttonToShake, "shake");
       }
+      let { commit, dispatch } = this.$store;
       let data = this.getAudioMetadata();
-      this.$store.commit("updateParticipant", data);
+      commit("updateParticipant", data);
       this.$store.state.recordingCount++;
       //Send Audio
-
-      if (navigator.onLine) {
-        let payload = this.aggregatePayload(data);
-        let config = {
-          headers: { "content-type": "multipart/form-data" }
-        };
-        axios
-          .post("/new_data/ww_temp_storage", payload, config)
-          .catch(err => console.error(err));
-        console.log("Posted sample to the CSAI Database!");
-      } else await this.cacheData(data);
+      let payload = this.aggregatePayload(data);
+      if (navigator.onLine) dispatch("uploadAudioSample", payload);
+      else dispatch("cacheData", payload);
       //Queue autofill if taking another recording.
       if (additionalTakes) {
         data.tone = "";
-        this.$store.commit("updateAutofillData", data);
+        data.emphasis = "";
+        commit("updateAutofillData", data);
       }
       this.$router.push("/");
     },
@@ -161,7 +164,8 @@ export default {
     aggregatePayload(data) {
       //Create clone of data object so we don't mutate the original.
       data = { ...data };
-      data.isWakeWord = data.category === "ww";
+      data.isWakeWord = this.isWakeWord;
+      data.emphasis = data["Emphasized Syllable"];
       data.timestamp = parseInt(Date.now() / 1000);
       delete data.category;
       let formData = new FormData();
@@ -172,7 +176,6 @@ export default {
       return formData;
     },
     exit() {
-      this.$store.commit("eraseRecording");
       this.$router.push("/");
     },
     autofill() {
@@ -185,9 +188,6 @@ export default {
 
       this.wasAutofilled = true;
       this.$store.commit("updateAutofillData", null);
-    },
-    cacheData(data) {
-      console.log("Since you aren't online, I'll cache the data");
     }
   },
 
@@ -197,6 +197,8 @@ export default {
     this.setupAudio();
   },
   beforeDestroy() {
+    this.$refs.audio.src = "";
+    this.$store.commit("eraseRecording");
     if (this.audio.url) URL.revokeObjectURL(this.audio.url);
   }
 };

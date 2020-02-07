@@ -6,13 +6,14 @@ Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/",
+    path: "/record",
     name: "record",
     component: Record
   },
   {
-    path: "/classify",
+    path: "/classify/:isWakeWord",
     name: "classify",
+    props: true,
     component: () =>
       import(/* webpackChunkName: "classify" */ "../views/Classify.vue")
   },
@@ -27,6 +28,11 @@ const routes = [
     name: "phrases",
     component: () =>
       import(/* webpackChunkName: "recents" */ "../views/Phrases.vue")
+  },
+  {
+    path: "*",
+    name: "default",
+    component: Record
   }
 ];
 

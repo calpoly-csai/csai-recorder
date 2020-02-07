@@ -1,10 +1,13 @@
 <template>
   <div class="menu">
-    <router-link to="/" class="choice">
+    <router-link to="record" class="choice">
       <ion-icon name="mic"></ion-icon>
     </router-link>
     <router-link to="phrases" class="choice">
       <ion-icon name="quote"></ion-icon>
+    </router-link>
+    <router-link to="help" class="choice">
+      <ion-icon name="help"></ion-icon>
     </router-link>
   </div>
 </template>
