@@ -8,7 +8,9 @@
         :key="choice.value"
         @click="selectChoice(choice.value)"
         :class="{ selected: choice.value === value }"
-      >{{ choice.label }}</button>
+      >
+        {{ choice.label }}
+      </button>
     </div>
   </div>
 </template>
@@ -42,6 +44,7 @@ export default {
     display: flex;
     justify-content: flex-start;
     flex-wrap: nowrap;
+    overflow-y: scroll;
     .choice {
       flex: 0 0 auto;
       color: var(--secondary);
