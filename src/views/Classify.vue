@@ -48,9 +48,9 @@ export default {
     SelectField
   },
   props: {
-    isWakeWord: {
-      required: true,
-      type: Boolean
+    script: {
+      type: String,
+      default: ""
     }
   },
   data() {
@@ -116,6 +116,9 @@ export default {
     },
     fieldsAreValid() {
       return this.fields.every(field => field.value.length);
+    },
+    isWakeWord() {
+      return this.script === "nimbus";
     }
   },
   methods: {
@@ -153,7 +156,7 @@ export default {
         data.emphasis = "";
         commit("updateAutofillData", data);
       }
-      this.$router.push("/");
+      this.$router.push("/record");
     },
     getAudioMetadata() {
       return this.fields.reduce((obj, field) => {
@@ -175,8 +178,9 @@ export default {
       }
       return formData;
     },
-    exit() {
-      this.$router.push("/");
+    exit(event) {
+      event.target.disabled = true;
+      this.$router.push("/record");
     },
     autofill() {
       let { autofillData } = this.$store.state;
