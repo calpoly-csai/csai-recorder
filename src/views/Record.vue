@@ -26,7 +26,6 @@
 import { CanvasBlob, ProgressRing } from "@/modules/canvas";
 import { tween, delay, animateEl } from "@/modules/animation";
 import WordCard from "@/components/WordCard";
-import Recorder from "recorder-js";
 export default {
   components: {
     WordCard
@@ -35,7 +34,6 @@ export default {
     return {
       /** The word that the user will speak into the mic*/
       word: "Nimbus",
-      recorder: null,
       /**Class which controls the amorphous central circle canvas element*/
       canvasBlob: null,
       /**Class which controls the timing ring during the recording*/
@@ -59,26 +57,17 @@ export default {
       if (recordingCount > 1) return `${recordingCount} Recordings`;
       else if (recordingCount === 1) return `${recordingCount} Recording`;
       else return "";
+    },
+    recorder() {
+      return this.$store.state.recorder;
     }
   },
   methods: {
-    /**Asks user for mic permission and sets up recorder.*/
+    /**Ensures recorder is initialized when component is mounted */
     async prepareAudio() {
-      let stream;
-      try {
-        stream = await navigator.mediaDevices.getUserMedia({
-          audio: true
-        });
-      } catch (err) {
-        console.log(err);
-        return (this.state = "error");
-      }
-
-      let context = new (window.AudioContext || window.webkitAudioContext)({
-        sampleRate: 16000
-      });
-      this.recorder = new Recorder(context);
-      this.recorder.init(stream);
+      if (this.recorder) return;
+      let success = await this.$store.dispatch("setUpRecorder");
+      if (!success) this.state = "error";
     },
     /**Performs the recording sequence and then transitions to the Classify page*/
     async getAudioSample() {
@@ -132,8 +121,8 @@ export default {
     async goToClassify() {
       this.state = "transition";
       await delay(1000);
-      let isWakeWord = this.word.toLowerCase().trim() === "nimbus";
-      this.$router.push({ name: "classify", params: { isWakeWord } });
+      let script = this.word.toLowerCase().trim();
+      this.$router.push({ name: "classify", params: { script } });
     },
     /**Resizes canvas elements when browser window dimensions change*/
     onResize() {
