@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Record from "../views/Record.vue";
+import store from "@/store/index.js";
 
 Vue.use(VueRouter);
 
@@ -11,11 +12,15 @@ const routes = [
     component: Record
   },
   {
-    path: "/classify/:isWakeWord",
+    path: "/classify/:script",
     name: "classify",
     props: true,
     component: () =>
-      import(/* webpackChunkName: "classify" */ "../views/Classify.vue")
+      import(/* webpackChunkName: "classify" */ "../views/Classify.vue"),
+    beforeEnter: (to, from, next) => {
+      if (!store.state.recording) next("/record");
+      else next();
+    }
   },
   {
     path: "/recents",
