@@ -1,12 +1,16 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
+import Recorder from "recorder-js";
+
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
     /**Blob of recording */
     recording: null,
+    /**Recorder-js class for recording audio data */
+    recorder: null,
     /**Number of recordings taken in the current session */
     recordingCount: 0,
     /**Information of recent participants (cleared when app exits)*/
@@ -64,6 +68,24 @@ export default new Vuex.Store({
         return;
       }
       console.log("Posted sample to the CSAI Database!");
+    },
+    async setUpRecorder({ state }) {
+      let stream;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          audio: true
+        });
+      } catch (err) {
+        console.log(err);
+        return false;
+      }
+
+      let context = new (window.AudioContext || window.webkitAudioContext)({
+        sampleRate: 16000
+      });
+      state.recorder = new Recorder(context);
+      state.recorder.init(stream);
+      return true;
     }
   }
 });
