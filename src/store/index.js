@@ -77,10 +77,13 @@ export default new Vuex.Store({
         console.log(err);
         return false;
       }
-
-      let context = new (window.AudioContext || window.webkitAudioContext)({
-        sampleRate: 16000
-      });
+      const isFirefox =
+        navigator.userAgent.toLowerCase().indexOf("firefox") > -1;
+      let options = {};
+      if (!isFirefox) options.sampleRate = 16000;
+      let context = new (window.AudioContext || window.webkitAudioContext)(
+        options
+      );
       state.recorder = new Recorder(context);
       state.recorder.init(stream);
       return true;

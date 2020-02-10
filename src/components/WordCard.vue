@@ -1,20 +1,14 @@
 <template>
   <div class="word-card">
-    <span class="text">Say </span
-    ><span
+    <span class="text">Say&nbsp</span>
+    <span
       class="word"
       ref="word"
       contenteditable="true"
       @blur="updateWord"
       @click="selectAll"
-      >Nimbus</span
-    >
-    <ion-icon
-      @click="randomizeWord"
-      ref="shuffle"
-      class="shuffle-icon"
-      name="sync"
-    ></ion-icon>
+    >Nimbus</span>
+    <ion-icon @click="randomizeWord" ref="shuffle" class="shuffle-icon" name="sync"></ion-icon>
   </div>
 </template>
 
@@ -73,7 +67,10 @@ export default {
       animation: spin 0.7s;
 
       @keyframes spin {
-        to {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
           transform: rotate(-360deg);
         }
       }

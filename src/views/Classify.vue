@@ -168,6 +168,7 @@ export default {
       //Create clone of data object so we don't mutate the original.
       data = { ...data };
       data.isWakeWord = this.isWakeWord;
+      data.script = this.script;
       data.emphasis = data["Emphasized Syllable"];
       data.timestamp = parseInt(Date.now() / 1000);
       delete data.category;
