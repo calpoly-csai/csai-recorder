@@ -60,9 +60,7 @@ export default new Vuex.Store({
         headers: { "content-type": "multipart/form-data" }
       };
       try {
-        await axios
-          .post("/new_data/ww_temp_storage", payload, config)
-          .catch(err => console.error(err));
+        await axios.post("/new_data/wakeword", payload, config);
       } catch (err) {
         console.log(err);
         return;
