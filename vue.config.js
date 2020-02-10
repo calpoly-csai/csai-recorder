@@ -7,6 +7,9 @@ module.exports = {
     appleMobileWebAppStatusBarStyle: "default",
     manifestOptions: {
       background_color: "#FFF"
+    },
+    workboxOptions: {
+      exclude: ["_redirects"]
     }
   }
 };
