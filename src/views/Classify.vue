@@ -3,7 +3,7 @@
     <div class="content">
       <nav>
         <ion-icon name="arrow-back" @click="exit"></ion-icon>
-        <ion-icon name="book" @click="$router.push('/recents')"></ion-icon>
+        <ion-icon name="book" @click="$router.push({name: 'recents'})"></ion-icon>
       </nav>
       <div class="title">
         <h1>Classify</h1>
@@ -147,14 +147,16 @@ export default {
       this.$store.state.recordingCount++;
       //Send Audio
       let payload = this.aggregatePayload(data);
-      if (navigator.onLine) dispatch("uploadAudioSample", payload);
-      else dispatch("cacheData", payload);
+      // if (navigator.onLine) dispatch("uploadAudioSample", payload);
+      // else dispatch("cacheData", payload);
       //Queue autofill if taking another recording.
+      let autofillData = null;
       if (additionalTakes) {
         data.tone = "";
-        data.emphasis = "";
-        commit("updateAutofillData", data);
+        data.emphasizedSyllable = "";
+        autofillData = data;
       }
+      commit("updateAutofillData", autofillData);
       this.$router.push("/record");
     },
     getAudioMetadata() {
@@ -168,7 +170,7 @@ export default {
       data = { ...data };
       data.isWakeWord = this.isWakeWord;
       data.script = this.script;
-      data.emphasis = data["Emphasized Syllable"];
+      data.emphasis = data.emphasizedSyllable;
       data.timestamp = parseInt(Date.now() / 1000);
       delete data.category;
       let formData = new FormData();
@@ -180,6 +182,7 @@ export default {
     },
     exit(event) {
       event.target.disabled = true;
+      this.$store.commit("eraseRecording");
       this.$router.push("/record");
     },
     autofill() {
@@ -187,7 +190,7 @@ export default {
       for (let key in autofillData) {
         let label = textFromCamelCase(key);
         let field = this.fields.find(field => field.label === label);
-        field.value = autofillData[key];
+        if (field !== -1) field.value = autofillData[key];
       }
 
       this.wasAutofilled = true;
@@ -202,7 +205,6 @@ export default {
   },
   beforeDestroy() {
     this.$refs.audio.src = "";
-    this.$store.commit("eraseRecording");
     if (this.audio.url) URL.revokeObjectURL(this.audio.url);
   }
 };
