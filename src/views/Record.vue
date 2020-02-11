@@ -4,7 +4,7 @@
     <div v-if="state === 'countdown'" class="countdown-container">
       <h2 class="countdown">{{ counter }}</h2>
     </div>
-    <div v-else-if="state === 'recording'" class="progress-container"></div>
+    <h3 v-else-if="state === 'recording'" class="recording-prompt">"{{script}}"</h3>
     <div v-else-if="state === 'transition'" class="transition"></div>
     <div v-else-if="state === 'error'" class="error-container">
       <h2>🔇</h2>
@@ -15,7 +15,7 @@
       <button class="reload" @click="reloadPage">Reload</button>
     </div>
     <div v-else class="microphone-container">
-      <word-card @update="word = $event"></word-card>
+      <word-card @update="script = $event"></word-card>
       <ion-icon name="mic" class="mic" @click="getAudioSample"></ion-icon>
       <p class="recording-count">{{ recordingCountLabel }}</p>
     </div>
@@ -32,8 +32,8 @@ export default {
   },
   data() {
     return {
-      /** The word that the user will speak into the mic*/
-      word: "Nimbus",
+      /** The script that the user will speak into the mic*/
+      script: "Nimbus",
       /**Class which controls the amorphous central circle canvas element*/
       canvasBlob: null,
       /**Class which controls the timing ring during the recording*/
@@ -121,7 +121,7 @@ export default {
     async goToClassify() {
       this.state = "transition";
       await delay(1000);
-      let script = this.word.toLowerCase().trim();
+      let script = this.script.toLowerCase().trim();
       this.$router.push({ name: "classify", params: { script } });
     },
     /**Resizes canvas elements when browser window dimensions change*/
@@ -223,6 +223,30 @@ export default {
     .countdown {
       font-size: 20vmin;
       color: var(--accent);
+    }
+  }
+
+  .recording-prompt {
+    animation: prompt 3s forwards;
+    position: absolute;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+    font-size: 25px;
+    color: white;
+
+    @keyframes prompt {
+      0%,
+      100% {
+        opacity: 0;
+      }
+      5%,
+      95% {
+        opacity: 1;
+      }
     }
   }
 
