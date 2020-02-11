@@ -17,34 +17,19 @@
           contenteditable="true"
           @input="answer = $event.target.innerText"
         ></div>
-        <button @click="tokenize">Tokenize</button>
+        <button class="primary" @click="tokenize">Tokenize</button>
       </div>
       <div v-else class="tokenizers">
         <h3 class="field-label">Question</h3>
-        <tokenizer
-          :text="question"
-          :label="label"
-          @input="tokenizedQuestion = $event"
-        ></tokenizer>
+        <tokenizer :text="question" :label="label" @input="tokenizedQuestion = $event"></tokenizer>
         <h3 class="field-label">Answer</h3>
-        <tokenizer
-          :text="answer"
-          :label="label"
-          @input="tokenizedAnswer = $event"
-        ></tokenizer>
-        <button @click="uploadPhrase" key="submit">Submit</button>
-        <button @click="editText" key="edit">Edit</button>
+        <tokenizer :text="answer" :label="label" @input="tokenizedAnswer = $event"></tokenizer>
+        <button class="primary" @click="uploadPhrase" key="submit">Submit</button>
+        <button class="secondary" @click="editText" key="edit">Edit</button>
       </div>
     </div>
     <div class="classifier" v-if="!isEditing">
-      <div
-        class="label"
-        v-for="label in labels"
-        :key="label"
-        @click="setLabel(label)"
-      >
-        {{ label }}
-      </div>
+      <div class="label" v-for="label in labels" :key="label" @click="setLabel(label)">{{ label }}</div>
     </div>
   </div>
 </template>

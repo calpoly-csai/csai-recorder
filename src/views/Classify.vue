@@ -29,8 +29,8 @@
           ></select-field>
         </div>
         <div class="options">
-          <button @click="postAudio(true)" ref="anotherButton">Another</button>
-          <button @click="postAudio(false)" ref="doneButton">Done</button>
+          <button class="primary" @click="postAudio(true)" ref="anotherButton">Record Again</button>
+          <button class="secondary" @click="postAudio(false)" ref="doneButton">Done</button>
         </div>
       </form>
     </div>
@@ -94,8 +94,7 @@ export default {
             { label: "Happy", value: "happy" },
             { label: "Inquisitive", value: "inquisitive" },
             { label: "Neutral", value: "neutral" },
-            { label: "Serious", value: "serious" },
-            { label: "Stern", value: "stern" }
+            { label: "Serious", value: "serious" }
           ],
           value: ""
         },
