@@ -2,7 +2,7 @@
   <div class="page recents-view">
     <div class="content">
       <nav>
-        <ion-icon name="arrow-back" @click="$router.push('classify')"></ion-icon>
+        <ion-icon name="arrow-back" @click="$router.go(-1)"></ion-icon>
       </nav>
       <h1>Recents</h1>
       <ul class="participants">
@@ -23,6 +23,9 @@
 
 <script>
 export default {
+  props: {
+    script: String
+  },
   computed: {
     participants() {
       return this.$store.state.participants;
@@ -31,7 +34,7 @@ export default {
   methods: {
     queueAutofill(index) {
       this.$store.commit("updateAutofillData", this.participants[index]);
-      this.$router.push("/classify");
+      this.$router.go(-1);
     }
   },
   mounted() {
