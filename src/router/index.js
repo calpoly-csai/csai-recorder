@@ -23,7 +23,7 @@ const routes = [
     }
   },
   {
-    path: "/recents",
+    path: "/classify/:script/recents/",
     name: "recents",
     component: () =>
       import(/* webpackChunkName: "recents" */ "../views/Recents.vue")
