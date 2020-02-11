@@ -85,15 +85,26 @@ h1 {
 button {
   display: block;
   border: none;
-  color: white;
-  background: var(--dark);
-  padding: 7px 67px;
+
   border-radius: 10px;
   font-family: inherit;
   font-size: inherit;
   margin: 20px auto;
   cursor: pointer;
   transition: transform 0.3s;
+
+  &.primary {
+    padding: 10px 60px;
+    color: white;
+    background: var(--dark);
+  }
+
+  &.secondary {
+    padding: 5px 60px;
+    color: var(--dark);
+    background: transparent;
+    border: 2px solid var(--dark);
+  }
 
   &.shake {
     animation: shake 0.5s ease-in-out;
