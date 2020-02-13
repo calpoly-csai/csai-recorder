@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
 import Recorder from "recorder-js";
+import storage from "@/modules/storage";
 
 Vue.use(Vuex);
 
@@ -46,10 +47,28 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    /** Takes all cached samples in local IndexDB storage and uploads them to the CSAI server*/
-    cacheData() {
+    /** Takes all cached samples in local IndexedDB storage and uploads them to the CSAI server*/
+    cacheRecording(_, recording) {
       //TODO: Use index db to cache data
-      console.log("Since you aren't online, I'll cache the data");
+
+      let cacheData = Object.fromEntries(Array.from(recording));
+      storage.addRecording(cacheData);
+    },
+    /**Sends all cached data to the server and erases it in local storage */
+    async uploadCache({ dispatch }) {
+      let recording = await storage.getRecording();
+      while (recording) {
+        let fd = new FormData();
+        for (let key in recording) {
+          fd.append(key, recording[key]);
+        }
+        await dispatch("uploadAudioSample", fd);
+        console.log(fd);
+        await storage.deleteRecording(recording);
+        recording = await storage.getRecording();
+      }
+
+      debugger;
     },
     /**
      * Uploads Wake Word audio data to the CSAI server
