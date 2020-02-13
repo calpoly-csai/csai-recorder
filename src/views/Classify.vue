@@ -148,7 +148,7 @@ export default {
       //Send Audio
       let payload = this.aggregatePayload(data);
       if (navigator.onLine) dispatch("uploadAudioSample", payload);
-      else dispatch("cacheData", payload);
+      else dispatch("cacheRecording", payload);
       //Queue autofill if taking another recording.
       let autofillData = null;
       if (additionalTakes) {
