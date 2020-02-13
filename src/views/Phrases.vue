@@ -97,6 +97,7 @@ export default {
     }
     .text-editor {
       .text-input {
+        min-height: 54px;
         padding: 15px;
         border-radius: 7px;
         background: whitesmoke;
