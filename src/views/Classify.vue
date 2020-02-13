@@ -147,8 +147,8 @@ export default {
       this.$store.state.recordingCount++;
       //Send Audio
       let payload = this.aggregatePayload(data);
-      // if (navigator.onLine) dispatch("uploadAudioSample", payload);
-      // else dispatch("cacheData", payload);
+      if (navigator.onLine) dispatch("uploadAudioSample", payload);
+      else dispatch("cacheData", payload);
       //Queue autofill if taking another recording.
       let autofillData = null;
       if (additionalTakes) {
