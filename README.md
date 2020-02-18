@@ -20,10 +20,6 @@ Before you begin, make sure that you have [Node](https://nodejs.org/) installed.
 
 Please feel free to post issues on the repo. The app still has a ways to go.
 
-## Safari Setup
-
-As of now, Safari does not support the `MediaRecorder API` by default. Turn this on in [experimental features]() to use the application.
-
 ## Resources
 
 - [Vue docs](https://vuejs.org/v2/guide/)
