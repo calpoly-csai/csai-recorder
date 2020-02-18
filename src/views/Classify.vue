@@ -70,14 +70,13 @@ export default {
         let buttonToShake = additionalTakes ? anotherButton : doneButton;
         return animateEl(buttonToShake, "shake");
       }
-      debugger;
       let { commit, dispatch } = this.$store;
       commit("updateParticipant", data);
       this.$store.state.recordingCount++;
       //Send Audio
       let payload = this.aggregatePayload(data);
-      // if (navigator.onLine) dispatch("uploadAudioSample", payload);
-      // else dispatch("cacheRecording", payload);
+      if (navigator.onLine) dispatch("uploadAudioSample", payload);
+      else dispatch("cacheRecording", payload);
       //Queue autofill if taking another recording.
       let autofillData = null;
       if (additionalTakes) {
