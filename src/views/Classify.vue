@@ -12,40 +12,22 @@
         </div>
         <audio ref="audio"></audio>
       </div>
-
-      <form @submit.prevent>
-        <div class="field" v-for="field in fields" :key="field.label">
-          <text-field
-            v-if="field.type === 'text'"
-            v-model="field.value"
-            :label="field.label"
-            v-bind="field.options"
-          ></text-field>
-          <select-field
-            v-else-if="field.type === 'select'"
-            v-model="field.value"
-            :label="field.label"
-            :choices="field.choices"
-          ></select-field>
-        </div>
-        <div class="options">
-          <button class="primary" @click="postAudio(true)" ref="anotherButton">Record Again</button>
-          <button class="secondary" @click="postAudio(false)" ref="doneButton">Done</button>
-        </div>
-      </form>
+      <wake-word-form ref="form" :script="script"></wake-word-form>
+      <div class="options">
+        <button class="primary" @click="postAudio(true)" ref="anotherButton">Record Again</button>
+        <button class="secondary" @click="postAudio(false)" ref="doneButton">Done</button>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import TextField from "@/components/TextField";
-import SelectField from "@/components/SelectField";
+import WakeWordForm from "@/components/WakeWordForm";
 import { textFromCamelCase, textToCamelCase } from "@/modules/parser";
 import { animateEl } from "@/modules/animation";
 export default {
   components: {
-    TextField,
-    SelectField
+    WakeWordForm
   },
   props: {
     script: {
@@ -59,65 +41,12 @@ export default {
         url: null,
         controller: null,
         isPlaying: false
-      },
-      wasAutofilled: false,
-
-      fields: [
-        { label: "First Name", type: "text", value: "" },
-        { label: "Last Name", type: "text", value: "" },
-        {
-          label: "Gender",
-          type: "select",
-          choices: [
-            { label: "Male", value: "m" },
-            { label: "Female", value: "f" },
-            { label: "Other", value: "nb" }
-          ],
-          value: ""
-        },
-        {
-          label: "Noise Level",
-          type: "select",
-          choices: [
-            { label: "Quiet", value: "q" },
-            { label: "Medium", value: "m" },
-            { label: "Loud", value: "l" }
-          ],
-          value: ""
-        },
-        { label: "Location", type: "text", value: "" },
-        {
-          label: "Tone",
-          type: "select",
-          choices: [
-            { label: "Annoyed", value: "annoyed" },
-            { label: "Happy", value: "happy" },
-            { label: "Inquisitive", value: "inquisitive" },
-            { label: "Neutral", value: "neutral" },
-            { label: "Serious", value: "serious" }
-          ],
-          value: ""
-        },
-        {
-          label: "Emphasized Syllable",
-          type: "text",
-          value: "",
-          options: {
-            maxLength: 3
-          }
-        }
-      ]
+      }
     };
   },
   computed: {
     audioBlob() {
       return this.$store.state.recording;
-    },
-    fieldsAreValid() {
-      return this.fields.every(field => field.value.length);
-    },
-    isWakeWord() {
-      return this.script === "nimbus";
     }
   },
   methods: {
@@ -133,46 +62,35 @@ export default {
         this.audio.isPlaying = false;
       }, 3000);
     },
-
     async postAudio(additionalTakes) {
       //Validate inputs.
-      if (!this.fieldsAreValid) {
+      let data = this.$refs.form.getData();
+      if (!data) {
         let { anotherButton, doneButton } = this.$refs;
         let buttonToShake = additionalTakes ? anotherButton : doneButton;
         return animateEl(buttonToShake, "shake");
       }
+      debugger;
       let { commit, dispatch } = this.$store;
-      let data = this.getAudioMetadata();
       commit("updateParticipant", data);
       this.$store.state.recordingCount++;
       //Send Audio
       let payload = this.aggregatePayload(data);
-      if (navigator.onLine) dispatch("uploadAudioSample", payload);
-      else dispatch("cacheRecording", payload);
+      // if (navigator.onLine) dispatch("uploadAudioSample", payload);
+      // else dispatch("cacheRecording", payload);
       //Queue autofill if taking another recording.
       let autofillData = null;
       if (additionalTakes) {
         data.tone = "";
-        data.emphasizedSyllable = "";
+        data.emphasis = "";
         autofillData = data;
       }
       commit("updateAutofillData", autofillData);
       this.$router.push("/record");
     },
-    getAudioMetadata() {
-      return this.fields.reduce((obj, field) => {
-        obj[textToCamelCase(field.label)] = field.value;
-        return obj;
-      }, {});
-    },
     aggregatePayload(data) {
       //Create clone of data object so we don't mutate the original.
-      data = { ...data };
-      data.isWakeWord = this.isWakeWord;
-      data.script = this.script;
-      data.emphasis = data.emphasizedSyllable;
       data.timestamp = parseInt(Date.now() / 1000);
-      delete data.category;
       let formData = new FormData();
       formData.append("wav_file", this.audioBlob);
       for (let key in data) {
@@ -184,23 +102,11 @@ export default {
       event.target.disabled = true;
       this.$store.commit("eraseRecording");
       this.$router.push("/record");
-    },
-    autofill() {
-      let { autofillData } = this.$store.state;
-      for (let key in autofillData) {
-        let label = textFromCamelCase(key);
-        let field = this.fields.find(field => field.label === label);
-        if (field !== -1) field.value = autofillData[key];
-      }
-
-      this.wasAutofilled = true;
-      this.$store.commit("updateAutofillData", null);
     }
   },
 
   mounted() {
     this.$emit("showMenu", false);
-    if (this.$store.state.autofillData) this.autofill();
     this.setupAudio();
   },
   beforeDestroy() {
@@ -234,16 +140,6 @@ export default {
         display: block;
         pointer-events: none;
       }
-    }
-  }
-  form {
-    padding: 20px 10px;
-
-    .field {
-      margin: 10px 0;
-    }
-    .options {
-      margin-top: 40px;
     }
   }
 }
