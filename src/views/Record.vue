@@ -102,7 +102,7 @@ export default {
       tween([0, blobRadius / 10], 500, val => (this.canvasBlob.dr = val));
       this.progressRing.opacity = 0;
       this.progressRing.show();
-      tween([0, 1], 3000, val => {
+      tween([0, 1], 2432, val => {
         this.progressRing.progress = val;
         let opacity;
         if (val <= 0.25) opacity = 4 * val;
@@ -110,7 +110,7 @@ export default {
         this.progressRing.opacity = opacity;
       });
       await this.recorder.start();
-      await delay(3000);
+      await delay(2432);
       let payload = await this.recorder.stop();
       this.$store.commit("updateRecording", payload.blob);
       this.progressRing.hide();
