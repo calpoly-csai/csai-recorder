@@ -1,5 +1,5 @@
 <template>
-  <div class="text-field" :class="{ invalid }">
+  <div class="text-field">
     <p class="label" :class="{ shown: showLabel }">{{ label }}</p>
     <input
       :value="value"
@@ -8,6 +8,7 @@
       @blur="$emit('blur', $event)"
       :placeholder="label"
       :type="type"
+      :class="{ invalid }"
     />
     <p class="label error" :class="{ shown: invalid }">{{ errorMessage }}</p>
   </div>
@@ -50,10 +51,6 @@ export default {
   border-radius: 7px;
   background: transparent;
 
-  &.invalid {
-    background: #f3080869;
-  }
-
   .label {
     margin-left: 5px;
     font-size: 12px;
@@ -78,6 +75,7 @@ export default {
       font-weight: 500;
       transform: translateY(-100%);
       clip-path: inset(100% 0 0 0);
+      color: red;
     }
   }
   input {
@@ -91,6 +89,10 @@ export default {
     margin: 0;
     padding: 7px;
     color: var(--dark);
+
+    &.invalid {
+      background: #fdeded;
+    }
   }
   ::placeholder {
     color: rgba(44, 44, 44, 0.486);
