@@ -70,9 +70,10 @@ export default {
     },
     uploadPhrase() {
       let payload = {
-        quesiton: this.tokenizedQuestion,
+        question: this.tokenizedQuestion,
         answer: this.tokenizedAnswer
       };
+      console.log(payload);
       this.question = "";
       this.answer = "";
       this.isEditing = true;

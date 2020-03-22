@@ -6,9 +6,7 @@
         class="text"
         @click="selectToken(index)"
         :class="{ selected: selectedIndicies.includes(index) }"
-      >
-        {{ token.text }}
-      </p>
+      >{{ token.text }}</p>
     </div>
   </div>
 </template>
@@ -66,11 +64,11 @@ export default {
         (payload, token) => {
           if (token.label) {
             payload.text += `[${tokens[token.label]}] `;
-            payload.values.push(token.text);
+            payload.variables.push(token.text);
           } else payload.text += `${token.text} `;
           return payload;
         },
-        { text: "", values: [] }
+        { text: "", variables: [] }
       );
       payload.text = payload.text.trim();
       this.$emit("input", payload);

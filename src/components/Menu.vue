@@ -7,14 +7,18 @@
       <ion-icon name="quote"></ion-icon>
     </router-link>
     <router-link to="help" class="choice">
-      <ion-icon name="help"></ion-icon>
+      <ion-icon name="help" @click="openTutorial"></ion-icon>
     </router-link>
   </div>
 </template>
 
 <script>
 export default {
-  props: {}
+  methods: {
+    openTutorial() {
+      window.open("https://youtu.be/3lczVrzJcEg", "_blank");
+    }
+  }
 };
 </script>
 
