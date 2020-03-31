@@ -38,6 +38,7 @@
 import Tokenizer from "@/components/Tokenizer";
 import { animateEl } from "@/modules/animation";
 import tokens from "@/modules/classification-tokens";
+import axios from "axios";
 export default {
   components: {
     Tokenizer
@@ -48,8 +49,8 @@ export default {
       isEditing: true,
       question: "",
       answer: "",
-      tokenizedQuestion: { text: "", tokens: [] },
-      tokenizedAnswer: { text: "", tokens: [] },
+      tokenizedQuestion: { format: "", variables: [] },
+      tokenizedAnswer: { format: "", variables: [] },
       labels: Object.keys(tokens)
     };
   },
@@ -73,7 +74,9 @@ export default {
         question: this.tokenizedQuestion,
         answer: this.tokenizedAnswer
       };
-      console.log(payload);
+      axios
+        .post("http://0.0.0.0:8080/new_data/phrase", payload)
+        .catch(err => console.error(err));
       this.question = "";
       this.answer = "";
       this.isEditing = true;

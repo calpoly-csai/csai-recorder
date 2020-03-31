@@ -63,14 +63,14 @@ export default {
       let payload = this.tokens.reduce(
         (payload, token) => {
           if (token.label) {
-            payload.text += `[${tokens[token.label]}] `;
+            payload.format += `[${tokens[token.label]}] `;
             payload.variables.push(token.text);
-          } else payload.text += `${token.text} `;
+          } else payload.format += token.text;
           return payload;
         },
-        { text: "", variables: [] }
+        { format: "", variables: [] }
       );
-      payload.text = payload.text.trim();
+      payload.format = payload.format.trim();
       this.$emit("input", payload);
     },
     combineTokensBetween(start, end) {
