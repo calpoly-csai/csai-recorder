@@ -107,7 +107,9 @@ export default {
       }
     }
 
-    h3 {
+    .field-label {
+      margin-top: 15px;
+      margin-bottom: 5px;
       font-size: 15px;
     }
   }
