@@ -67,8 +67,6 @@ export default new Vuex.Store({
         await storage.deleteRecording(recording);
         recording = await storage.getRecording();
       }
-
-      debugger;
     },
     /**
      * Uploads Wake Word audio data to the CSAI server

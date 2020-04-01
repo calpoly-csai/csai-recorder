@@ -63,7 +63,8 @@ export default {
       let payload = this.tokens.reduce(
         (payload, token) => {
           if (token.label) {
-            payload.format += `[${tokens[token.label]}] `;
+            let tokenId = tokens[token.label] || token.label;
+            payload.format += `[${tokenId}] `;
             payload.variables.push(token.text);
           } else payload.format += token.text + " ";
           return payload;

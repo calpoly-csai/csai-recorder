@@ -28,20 +28,19 @@
         <button class="secondary" @click="editText" key="edit">Edit</button>
       </div>
     </div>
-    <div class="classifier" v-if="!isEditing">
-      <div class="label" v-for="label in labels" :key="label" @click="setLabel(label)">{{ label }}</div>
-    </div>
+    <token-bar v-if="!isEditing" @update="setLabel"></token-bar>
   </div>
 </template>
 
 <script>
 import Tokenizer from "@/components/Tokenizer";
+import TokenBar from "@/components/TokenBar";
 import { animateEl } from "@/modules/animation";
-import tokens from "@/modules/classification-tokens";
 import axios from "axios";
 export default {
   components: {
-    Tokenizer
+    Tokenizer,
+    TokenBar
   },
   data() {
     return {
@@ -50,8 +49,7 @@ export default {
       question: "",
       answer: "",
       tokenizedQuestion: { format: "", variables: [] },
-      tokenizedAnswer: { format: "", variables: [] },
-      labels: Object.keys(tokens)
+      tokenizedAnswer: { format: "", variables: [] }
     };
   },
   methods: {
@@ -110,31 +108,6 @@ export default {
 
     h3 {
       font-size: 15px;
-    }
-  }
-
-  .classifier {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    display: flex;
-    justify-content: flex-start;
-    height: 50px;
-    width: 100%;
-    padding: 15px 0;
-    background: var(--accent);
-    overflow-x: scroll;
-
-    .label {
-      cursor: pointer;
-      margin: 0 20px;
-      white-space: nowrap;
-      flex: 0 0 auto;
-      color: white;
-      transition: transform 0.5s;
-      &:active {
-        transform: scale(0.95);
-      }
     }
   }
 }
