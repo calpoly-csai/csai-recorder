@@ -65,7 +65,7 @@ export default {
           if (token.label) {
             payload.format += `[${tokens[token.label]}] `;
             payload.variables.push(token.text);
-          } else payload.format += token.text;
+          } else payload.format += token.text + " ";
           return payload;
         },
         { format: "", variables: [] }

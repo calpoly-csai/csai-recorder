@@ -74,9 +74,7 @@ export default {
         question: this.tokenizedQuestion,
         answer: this.tokenizedAnswer
       };
-      axios
-        .post("http://0.0.0.0:8080/new_data/phrase", payload)
-        .catch(err => console.error(err));
+      axios.post("/new_data/phrase", payload).catch(err => console.error(err));
       this.question = "";
       this.answer = "";
       this.isEditing = true;
