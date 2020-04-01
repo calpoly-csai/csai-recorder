@@ -29,6 +29,7 @@
 
 <script>
 import tokens from "@/modules/classification-tokens";
+let hasContent = /[a-zA-Z]/;
 export default {
   data() {
     return {
@@ -39,6 +40,7 @@ export default {
   },
   computed: {
     filteredLabels() {
+      if (!hasContent.test(this.labelInput)) return this.labels;
       let lowercasedInput = this.labelInput.toLowerCase();
       return this.labels.filter(label =>
         label.toLowerCase().includes(lowercasedInput)
@@ -50,10 +52,10 @@ export default {
       this.labelInput = e.target.innerText;
     },
     addLabel() {
-      let hasContent = /[a-zA-Z]/;
       if (this.inputShown && hasContent.test(this.labelInput)) {
-        this.labels.unshift(this.labelInput);
-        this.$emit("update", this.labelInput);
+        let userLabel = this.labelInput.trim();
+        this.labels.unshift(userLabel);
+        this.$emit("update", userLabel);
         this.labelInput = this.$refs.labelInput.innerText = "";
       } else if (!this.inputShown) {
         setTimeout(() => {
@@ -68,7 +70,7 @@ export default {
       e.target.innerText = text;
     },
     hideInput() {
-      if (this.labelInput.length) return;
+      if (hasContent.test(this.labelInput)) return;
       this.inputShown = false;
     }
   }
@@ -91,7 +93,7 @@ export default {
   .add-button {
     display: block;
     height: 30px;
-    margin: 0 20px;
+    margin: 0 15px;
     fill: white;
     opacity: 0.5;
 
@@ -103,7 +105,7 @@ export default {
   .text-field {
     color: white;
     padding: 0 20px;
-    margin-left: 40px;
+    margin-left: 15px;
   }
 
   .label {
