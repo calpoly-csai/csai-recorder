@@ -288,6 +288,7 @@ export default {
     }
 
     .reload {
+      padding: 10px 15px;
       color: var(--accent);
       background: white;
     }

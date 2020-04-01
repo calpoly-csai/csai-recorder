@@ -85,7 +85,6 @@ export default {
   align-items: center;
   height: 50px;
   width: 100%;
-  padding: 15px 0;
   background: var(--accent);
   overflow-x: scroll;
 
@@ -104,6 +103,7 @@ export default {
   .text-field {
     color: white;
     padding: 0 20px;
+    margin-left: 40px;
   }
 
   .label {

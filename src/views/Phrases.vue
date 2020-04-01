@@ -54,6 +54,7 @@ export default {
   },
   methods: {
     tokenize() {
+      if (!this.question.length) return;
       this.isEditing = false;
       this.$emit("showMenu", false);
     },
