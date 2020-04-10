@@ -35,6 +35,12 @@ const routes = [
       import(/* webpackChunkName: "recents" */ "../views/Phrases.vue")
   },
   {
+    path: "/help",
+    name: "help",
+    component: () =>
+      import(/* webpackChunkName: "recents" */ "../views/Help.vue")
+  },
+  {
     path: "*",
     name: "default",
     component: Record
